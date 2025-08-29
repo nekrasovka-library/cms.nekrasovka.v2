@@ -15,6 +15,7 @@ const Block = require("./Block")(sequelize, DataTypes);
 const Menu = require("./Menu")(sequelize, DataTypes);
 const Variant = require("./Variant")(sequelize, DataTypes);
 const Template = require("./Template")(sequelize, DataTypes);
+const Event = require("./Event")(sequelize, DataTypes);
 
 // Associations
 Project.hasMany(Page, {
@@ -72,6 +73,7 @@ const db = {
     Menu,
     Variant,
     Template,
+    Event,
   },
 };
 

@@ -15,6 +15,7 @@ app.use("/api/pages", require("./routes/pages"));
 app.use("/api/blocks", require("./routes/blocks"));
 app.use("/api/menus", require("./routes/menus"));
 app.use("/api/templates", require("./routes/templates"));
+app.use("/api/events", require("./routes/events"));
 
 // function createMenus() {
 //   menus.data.forEach(async (menu) => {

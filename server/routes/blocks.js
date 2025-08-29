@@ -1,0 +1,125 @@
+const express = require("express");
+const router = express.Router();
+const { models } = require("../models");
+
+// POST /api/blocks - создать блок
+router.post("/", async (req, res) => {
+  try {
+    const { pageId, type, settings, styles, content, position } = req.body;
+
+    const blocks = await models.Block.findAll({ where: { pageId } });
+
+    for (const blockKey of blocks) {
+      if (blockKey.position >= position) {
+        blockKey.position += 1;
+        await blockKey.save();
+      }
+    }
+
+    await models.Block.create({
+      type,
+      settings,
+      styles,
+      content,
+      position,
+      pageId,
+    });
+
+    const page = await models.Page.findByPk(pageId, {
+      include: [{ model: models.Block, as: "blocks" }],
+      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
+    });
+
+    res.status(201).json(page);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to create block" });
+  }
+});
+
+// PUT /api/blocks/:id - обновить блок
+router.put("/:id", async (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const { type, settings, styles, content, position } = req.body || {};
+    const block = await models.Block.findByPk(id);
+    if (!block) return res.status(404).json({ error: "Block not found" });
+
+    if (typeof type !== "undefined") {
+      block.type = type;
+    }
+    if (typeof settings !== "undefined") {
+      block.settings = { ...block.settings, ...settings };
+    }
+    if (typeof styles !== "undefined") {
+      block.styles = { ...block.styles, ...styles };
+    }
+    if (typeof content !== "undefined") {
+      block.content = { ...block.content, ...content };
+    }
+    if (typeof position !== "undefined") {
+      const blocks = await models.Block.findAll({
+        where: { pageId: block.pageId },
+      });
+
+      for (const blockKey of blocks) {
+        if (position < block.position && blockKey.position === position) {
+          blockKey.position += 1;
+          await blockKey.save();
+        }
+        if (position > block.position && blockKey.position === position) {
+          blockKey.position -= 1;
+          await blockKey.save();
+        }
+      }
+
+      block.position = position;
+    }
+
+    await block.save();
+
+    const page = await models.Page.findByPk(block.pageId, {
+      include: [{ model: models.Block, as: "blocks" }],
+      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
+    });
+
+    res.status(201).json(page);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to update block" });
+  }
+});
+
+// DELETE /api/blocks/:id - удалить блок
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const block = await models.Block.findByPk(id);
+    if (!block) return res.status(404).json({ error: "Block not found" });
+
+    await block.destroy();
+
+    const blocks = await models.Block.findAll({
+      where: { pageId: block.pageId },
+    });
+
+    for (const blockKey of blocks) {
+      if (blockKey.position > block.position) {
+        blockKey.position -= 1;
+        await blockKey.save();
+      }
+    }
+
+    const page = await models.Page.findByPk(block.pageId, {
+      include: [{ model: models.Block, as: "blocks" }],
+      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
+    });
+
+    res.status(201).json(page);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to delete block" });
+  }
+});
+
+module.exports = router;

@@ -77,6 +77,16 @@ const formatDateForInput = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+function minStartOfTodayForDateTimeLocal() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  const pad = (n) => String(n).padStart(2, "0");
+  const y = d.getFullYear();
+  const m = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  return `${y}-${m}-${day}T00:00`;
+}
+
 export {
   useIsMobile,
   calculateBlockWidth,
@@ -85,4 +95,5 @@ export {
   formatTime,
   formatUrl,
   formatDateForInput,
+  minStartOfTodayForDateTimeLocal,
 };

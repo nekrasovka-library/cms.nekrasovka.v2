@@ -29,10 +29,10 @@ const EventPageConstructor = ({
   blockId,
   backgroundColor,
 }) => {
-  const today = new Date();
+  const dispatch = useDispatch();
+  const today = event.date || new Date();
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
-  const dispatch = useDispatch();
 
   const updateText = (newText) => {
     dispatch(
@@ -80,7 +80,7 @@ const EventPageConstructor = ({
           />
         </EventImageMobileStyled>
         <TextStyled>
-          <EventTextStyled>{event.title || "Заголовок"}</EventTextStyled>
+          <EventTextStyled>{event.title}</EventTextStyled>
         </TextStyled>
         {/*<TextStyled>*/}
         {/*  <EventTextStyled>*/}

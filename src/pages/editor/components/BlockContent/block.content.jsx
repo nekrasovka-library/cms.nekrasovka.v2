@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import {
   Container1,
   SettingsContentChanges,
-  SettingsLabel,
   SettingsTitleLabel,
 } from "./block.content.styles.js";
 import { useDispatch, useSelector } from "react-redux";
-import Header from "./components/header.jsx";
-import Icon from "../../../../nekrasovka-ui/Icon/icon";
+import ContentHeader from "./components/content.header.jsx";
 import {
   resetBlock,
   updateBlockRequest,
 } from "../../../../features/block/blockSlice";
 import { setContentVisibility } from "../../../../features/visibility/visibilitySlice";
+import { BLOCK_CONTENT_TYPES } from "./block.content.constants";
 
 const BlockContent = () => {
   const dispatch = useDispatch();
@@ -40,32 +39,50 @@ const BlockContent = () => {
     }
   }, [isContentVisible]);
 
+  const renderContent = (type, position) => {
+    const contentType = BLOCK_CONTENT_TYPES[type];
+
+    if (contentType === undefined || contentType.position !== position) return;
+    const ContentComponent = contentType.element;
+
+    const params = {
+      ...contentType.params,
+      value: blockContent[type],
+      type,
+    };
+
+    return (
+      <ContentComponent {...params} handleContentChange={handleContentChange} />
+    );
+  };
+
   return (
     <Container1 $isMenuOpen={isContentVisible}>
-      <Header
+      <ContentHeader
         saveSettings={saveContent}
         saveAndExitSettings={saveAndExitContent}
       />
-      <SettingsTitleLabel>Настройки контента</SettingsTitleLabel>
-      <SettingsTitleLabel>Изменения контента</SettingsTitleLabel>
-      {!!blockContent?.data?.next && (
+      <SettingsTitleLabel>Изменение контента</SettingsTitleLabel>
+      {!!blockContent && (
         <SettingsContentChanges>
-          {Object.entries(blockContent.data.next)
+          {Object.entries(blockContent)
             .map(([key, value]) => ({
               [key]: value,
             }))
-            .map((item, index) => {
-              return (
-                <div key={index}>
-                  <SettingsLabel>{Object.keys(item)[0]}</SettingsLabel>
-                  <Icon
-                    icon="closeMenu"
-                    height="10"
-                    type="button"
-                    onClick={() => console.log("delete", Object.keys(item)[0])}
-                  />
-                </div>
-              );
+            .map((item) => {
+              return renderContent(Object.keys(item)[0], 0);
+            })}
+        </SettingsContentChanges>
+      )}
+      <SettingsTitleLabel>Настройки контента</SettingsTitleLabel>
+      {!!blockContent && (
+        <SettingsContentChanges>
+          {Object.entries(blockContent)
+            .map(([key, value]) => ({
+              [key]: value,
+            }))
+            .map((item) => {
+              return renderContent(Object.keys(item)[0], 1);
             })}
         </SettingsContentChanges>
       )}

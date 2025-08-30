@@ -6,7 +6,7 @@ import {
   HeaderContainer,
 } from "../block.content.styles.js";
 
-const Header = ({ saveSettings, saveAndExitSettings }) => {
+const ContentHeader = ({ saveSettings, saveAndExitSettings }) => {
   return (
     <HeaderContainer>
       <HeaderButtons>
@@ -21,4 +21,4 @@ const Header = ({ saveSettings, saveAndExitSettings }) => {
   );
 };
 
-export default Header;
+export default ContentHeader;

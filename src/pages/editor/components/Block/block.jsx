@@ -21,11 +21,11 @@ import {
 } from "../../../../features/visibility/visibilitySlice";
 
 const Block = ({
-  styles,
-  settings,
-  content,
-  type,
-  position,
+  styles = {},
+  settings = {},
+  content = {},
+  type = "",
+  position = 0,
   pageId,
   blockId,
   totalBlocks,
@@ -109,6 +109,9 @@ const Block = ({
     const params = {
       type,
       blockId,
+      styles,
+      content,
+      settings,
       ...styles,
       ...content,
       ...settings,

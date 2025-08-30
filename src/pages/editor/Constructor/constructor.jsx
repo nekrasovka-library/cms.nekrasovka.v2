@@ -64,7 +64,7 @@ const Constructor = () => {
           },
         )
       ) : (
-        <Block />
+        <Block pageId={pageId} />
       )}
     </>
   );

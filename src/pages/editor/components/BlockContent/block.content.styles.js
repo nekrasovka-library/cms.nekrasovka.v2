@@ -93,25 +93,113 @@ const SettingsContentChanges = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 15px;
-  padding: 0 15px;
+`;
 
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 15px;
+`;
+
+const PaddingSelect = styled.select`
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #000;
+  font-size: 16px;
+  font-weight: 300;
+  height: 40px;
+  outline: none !important;
+  padding: 0;
+  width: 100%;
+
+  transition-duration: 0.3s;
+  transition-property: border-color;
+  transition-timing-function: cubic-bezier(0, 0, 0.8, 1);
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: #ff855d;
+    }
+  }
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 15px;
+`;
+
+const TextInput = styled.input`
+  padding: 5px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  width: 100%;
+  transition-duration: 0.3s;
+  transition-property: border-color, scale;
+  transition-timing-function: cubic-bezier(0, 0, 0.8, 1);
+
+  &::-webkit-inner-spin-button {
+    display: none;
+  }
+
+  &::placeholder {
+    opacity: 0.6;
   }
 
   @media (hover: hover) {
-    > div:hover {
-      label {
-        color: #ff855d;
-      }
-
-      button {
-        scale: 1.3;
-      }
+    &:hover {
+      border-color: #ff855d;
     }
   }
+`;
+
+const SwitchButton = styled.button`
+  position: relative;
+  width: 52px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: ${({ $checked }) => ($checked ? "#ff855d" : "#E5E5EA")};
+  transition: background-color 200ms ease;
+  cursor: pointer;
+  outline: none;
+
+  &:active .thumb {
+    transform: ${({ $checked }) =>
+      $checked ? "translateX(20px) scale(0.96)" : "translateX(0) scale(0.96)"};
+  }
+`;
+
+const Thumb = styled.span`
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.25),
+    0 1px 2px rgba(0, 0, 0, 0.15);
+  transform: ${({ $checked }) =>
+    $checked ? "translateX(20px)" : "translateX(0)"};
+  transition: transform 200ms ease;
+`;
+
+const HiddenCheckbox = styled.input.attrs({ type: "checkbox" })`
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
 `;
 
 export {
@@ -124,4 +212,11 @@ export {
   SettingsLabel,
   SettingsTitleLabel,
   SettingsContentChanges,
+  ContentContainer,
+  PaddingSelect,
+  TextInput,
+  TextContainer,
+  SwitchButton,
+  Thumb,
+  HiddenCheckbox,
 };

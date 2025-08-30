@@ -6,6 +6,8 @@ import pageSaga from "../../features/page/pageSaga";
 import menusSaga from "../../features/menus/menusSaga";
 import blockSaga from "../../features/block/blockSaga";
 import fontsSaga from "../../features/fonts/fontsSaga";
+import eventsSaga from "../../features/events/eventsSaga";
+import eventSaga from "../../features/event/eventSaga";
 
 export default function* rootSaga() {
   yield all([fork(templatesSaga)]);
@@ -15,4 +17,6 @@ export default function* rootSaga() {
   yield all([fork(menusSaga)]);
   yield all([fork(blockSaga)]);
   yield all([fork(fontsSaga)]);
+  yield all([fork(eventsSaga)]);
+  yield all([fork(eventSaga)]);
 }

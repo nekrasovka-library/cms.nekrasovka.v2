@@ -8,6 +8,8 @@ import templatesReducer from "../features/templates/templatesSlice";
 import menusReducer from "../features/menus/menusSlice";
 import visibilitySlice from "../features/visibility/visibilitySlice";
 import fontsSlice from "../features/fonts/fontsSlice";
+import eventsReducer from "../features/events/eventsSlice";
+import eventReducer from "../features/event/eventSlice";
 import rootSaga from "./sagas";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -22,6 +24,8 @@ const store = configureStore({
     menus: menusReducer,
     visibility: visibilitySlice,
     fonts: fontsSlice,
+    events: eventsReducer,
+    event: eventReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -19,6 +19,7 @@ const EventPage = ({
   paddingTop,
   paddingBottom,
   maxWidth,
+  content,
 }) => {
   maxWidth = calculateBlockWidth(maxWidth);
   const params = useParams();
@@ -26,10 +27,9 @@ const EventPage = ({
   const [event, setEvent] = useState(EVENT_DEFAULT);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const pageData = useSelector(({ page }) => page);
-  const contentData = useSelector((state) => state.content);
-  const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
+  const page = useSelector(({ page }) => page);
 
+  const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
   // TODO: следить за изменениями в event и добавлять их в page.settings панель для сохранения или отмены изменений
 
   const getEvents = (id) => {
@@ -42,13 +42,7 @@ const EventPage = ({
         if (isPreviewVisible) {
           setLoading(false);
         } else {
-          dispatch({
-            type: "UPDATE_CONTENT",
-            payload: {
-              ...contentData,
-              data: { ...contentData.data, prev: response },
-            },
-          });
+          dispatch({});
         }
       }
     });
@@ -56,7 +50,7 @@ const EventPage = ({
 
   // Загрузка событий
   useEffect(() => {
-    if (!!params[pageData.url]) getEvents(params[pageData.url]);
+    if (!!params[page.items.url]) getEvents(params[page.items.url]);
     else setLoading(false);
 
     return () => {
@@ -68,7 +62,7 @@ const EventPage = ({
         dispatch({ type: "RESET_CONTENT" });
       }
     };
-  }, [params[pageData.url]]);
+  }, [params[page.items.url]]);
 
   if (error) {
     return (
@@ -90,7 +84,7 @@ const EventPage = ({
         ) : (
           <EventPageConstructor
             blockId={blockId}
-            event={event}
+            event={content}
             setEvent={setEvent}
             backgroundColor={backgroundColor}
           />

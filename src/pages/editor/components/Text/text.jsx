@@ -18,7 +18,6 @@ const Text = ({
 }) => {
   const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
   maxWidth = calculateBlockWidth(maxWidth);
-
   return (
     <TextContainer
       $paddingTop={paddingTop}

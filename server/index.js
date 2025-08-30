@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { sequelize, models } = require("./models");
+const { events } = require("./data/events");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -34,9 +35,18 @@ app.use("/api/events", require("./routes/events"));
 //   });
 // }
 
+// function createEvents() {
+//   events.forEach(async (event) => {
+//     const { id } = await models.Event.create({ ...event });
+//
+//     console.log("❗", id, event);
+//   });
+// }
+
 // Start server after DB is ready
 async function start() {
   // createMenus();
+  // createEvents();
   try {
     await sequelize.sync(); // For dev convenience; replace with migrations in prod
     app.listen(PORT, () => {

@@ -47,7 +47,7 @@ const EventPageConstructor = ({
 
   return (
     <>
-      <LeftSectionStyled $isEventCancelled={event.canceled}>
+      <LeftSectionStyled $isEventCancelled={!!event.canceled}>
         {!!event.canceled && (
           <EventCanceled>
             Мероприятие отменено. Приносим извинения за возможные неудобства

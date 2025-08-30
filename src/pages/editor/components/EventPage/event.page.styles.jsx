@@ -400,10 +400,9 @@ const LeftSectionStyled = styled.section`
   display: flex;
   flex-direction: column;
 
-  input,
-  select {
-    font-family: Roboto, sans-serif;
-    line-height: 1;
+  * {
+    color: ${({ $isEventCancelled }) =>
+      $isEventCancelled ? "#777777" : "inherit"};
   }
 `;
 

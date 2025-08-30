@@ -5,10 +5,10 @@ import {
   ContentContainer,
 } from "../block.content.styles";
 
-const SelectField = ({ options, label, type, value, onChange }) => (
+const SelectField = ({ options, label, name, value, onChange }) => (
   <div>
     <SettingsLabel>{label}</SettingsLabel>
-    <PaddingSelect name={type} onChange={onChange} value={value}>
+    <PaddingSelect name={name} onChange={onChange} value={value}>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -21,14 +21,14 @@ const SelectField = ({ options, label, type, value, onChange }) => (
 const Select = ({
   value,
   label,
-  name,
+  type,
   options = { value: "", label: "" },
   handleContentChange,
 }) => {
   return (
     <ContentContainer>
       <SelectField
-        name={name}
+        name={type}
         label={label}
         value={value}
         options={options}

@@ -22,14 +22,12 @@ import Editor from "../Editor/editor";
 import { formatDate, formatTime } from "../../../../helpers";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
+import ImagePreview from "../Image/image.preview";
+import { useParams } from "react-router-dom";
 
-const EventPageConstructor = ({
-  setEvent,
-  event,
-  blockId,
-  backgroundColor,
-}) => {
+const EventPageConstructor = ({ setEvent, event, backgroundColor }) => {
   const dispatch = useDispatch();
+  const { blockId } = useParams();
   const today = event.date || new Date();
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
@@ -118,14 +116,7 @@ const EventPageConstructor = ({
         {/*</AuthorStyled>*/}
       </LeftSectionStyled>
       <RightSectionStyled $isEventCancelled={!!event.canceled}>
-        <ImageConstructor
-          blockId={blockId}
-          text={event.picture_id}
-          borderRadius="5"
-          updateImage={(newImage) =>
-            setEvent({ ...event, picture_id: newImage })
-          }
-        />
+        <ImagePreview text={event.picture_id} borderRadius="5" />
         {!event.canceled && (
           <div>
             <div>

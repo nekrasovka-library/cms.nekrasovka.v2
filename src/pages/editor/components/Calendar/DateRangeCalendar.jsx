@@ -31,14 +31,6 @@ const DateRangeCalendar = ({
   onApply,
   onChange,
 }) => {
-  console.log(
-    "❗",
-    initialStartDate instanceof Date,
-    typeof initialEndDate,
-    monthsToShow,
-    minDate,
-    maxDate,
-  );
   // Utils
   const ruMonths = useMemo(
     () => [

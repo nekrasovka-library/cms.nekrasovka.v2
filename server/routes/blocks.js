@@ -1,6 +1,66 @@
 const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
+const { Op, where, literal } = require("sequelize");
+
+// GET /api/blocks - получить список блоков с фильтрами и пагинацией
+router.get("/", async (req, res) => {
+  try {
+    const {
+      type,
+      from,
+      to,
+      limit,
+      offset,
+      orderBy = "content.dateOnly",
+      order = "DESC",
+    } = req.query;
+
+    const whereClause = {};
+    if (type) whereClause.type = type;
+
+    // выражение: только дата из content.date (YYYY-MM-DD), без времени
+    const dateOnlyExpr = literal(
+      "substr(json_extract(`content`,'$.date'),1,10)",
+    );
+
+    // фильтрация по дате (без времени)
+    if (from || to) {
+      const andConds = [];
+      if (from) andConds.push(where(dateOnlyExpr, { [Op.gte]: from }));
+      if (to) andConds.push(where(dateOnlyExpr, { [Op.lte]: to }));
+      if (andConds.length) {
+        whereClause[Op.and] = [...(whereClause[Op.and] || []), ...andConds];
+      }
+    }
+
+    const parsedLimit = Math.min(Number.parseInt(limit || "50", 10), 100);
+    const parsedOffset = Number.parseInt(offset || "0", 10);
+
+    const orderUpper = String(order).toUpperCase() === "ASC" ? "ASC" : "DESC";
+    const orderClause =
+      orderBy === "content.dateOnly" || orderBy === "content.date"
+        ? [[dateOnlyExpr, orderUpper]]
+        : [[orderBy, orderUpper]];
+
+    const { rows, count } = await models.Block.findAndCountAll({
+      where: whereClause,
+      limit: parsedLimit,
+      offset: parsedOffset,
+      order: orderClause,
+    });
+
+    res.json({
+      data: rows,
+      total: count,
+      limit: parsedLimit,
+      offset: parsedOffset,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to fetch blocks" });
+  }
+});
 
 // POST /api/blocks - создать блок
 router.post("/", async (req, res) => {

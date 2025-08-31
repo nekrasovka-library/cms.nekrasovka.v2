@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AfishaPageStyled,
   AfishaContainerStyled,
@@ -16,11 +16,12 @@ import {
 import EventCard from "../EventCard/event.card";
 import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import EventList from "../EventList/event.list";
-import { CONFIG, MONTHS, TAGS, WEEKDAYS } from "./afisha.page.constants";
+import { MONTHS, TAGS, WEEKDAYS } from "./afisha.page.constants";
 import { calculateBlockWidth } from "../../../../helpers";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import DateRangeCalendar from "../Calendar/DateRangeCalendar";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEventsRequest } from "../../../../features/events/eventsSlice";
 
 const AfishaPage = ({
   tracks,
@@ -30,49 +31,17 @@ const AfishaPage = ({
   paddingBottom,
 }) => {
   maxWidth = calculateBlockWidth(maxWidth);
-  const [events, setEvents] = useState({
-    data: [
-      {
-        id: 1,
-        date: "2025-07-20 00:00:00",
-        title: "«Бабушкины квадраты». Мастер-класс по вязанию",
-        text: '<div><p>Многоцветные бабушкины квадраты — это эффективный способ использовать небольшое количество пряжи, оставшейся от других проектов, а базовые мотивы бабушкиных квадратов не требуют особых навыков для выполнения.</p><p>Название технологии отсылает к изделиям пожилых мастериц, но не всё так просто!</p><p>Модели одежды с использованием бабушкиных квадратов не раз представлялись на неделях высокой моды, печатались в глянцевых журналах и циркулировали в массмаркетах. А квадраты-модули соединяются в юбки, платья, гольфы, пледы и даже в чехлы для табуреток!</p><p>Приходите на мастер-класс, чтобы научиться премудростям техники и хорошо провести время. Чтобы вам было комфортно, желательно иметь хотя бы начальный уровень навыков вязания.</p><p>Если у вас есть крючки и вязаные вещи, которые не жалко распустить, — приносите!</p><p>Ведущая мастер-класса — Наталья Сенаторова, эксперт Санкт-Петербургского культурного форума, основательница бренда вязаных изделий «Блаж Борисовны».<br></p><p class="">Пожалуйста, не забудьте зарегистрироваться на встречу. В случае переноса или отмены мастер-класса мы отправим вам письмо на указанный электронный адрес.</p></div>',
-        geo: "Аудитория 502 / 5 этаж",
-        price: 0,
-        restriction: "12+",
-      },
-      {
-        id: 2,
-        date: "2025-07-20 00:00:00",
-        title: "«Бабушкины квадраты». Мастер-класс по вязанию",
-        text: '<div><p>Многоцветные бабушкины квадраты — это эффективный способ использовать небольшое количество пряжи, оставшейся от других проектов, а базовые мотивы бабушкиных квадратов не требуют особых навыков для выполнения.</p><p>Название технологии отсылает к изделиям пожилых мастериц, но не всё так просто!</p><p>Модели одежды с использованием бабушкиных квадратов не раз представлялись на неделях высокой моды, печатались в глянцевых журналах и циркулировали в массмаркетах. А квадраты-модули соединяются в юбки, платья, гольфы, пледы и даже в чехлы для табуреток!</p><p>Приходите на мастер-класс, чтобы научиться премудростям техники и хорошо провести время. Чтобы вам было комфортно, желательно иметь хотя бы начальный уровень навыков вязания.</p><p>Если у вас есть крючки и вязаные вещи, которые не жалко распустить, — приносите!</p><p>Ведущая мастер-класса — Наталья Сенаторова, эксперт Санкт-Петербургского культурного форума, основательница бренда вязаных изделий «Блаж Борисовны».<br></p><p class="">Пожалуйста, не забудьте зарегистрироваться на встречу. В случае переноса или отмены мастер-класса мы отправим вам письмо на указанный электронный адрес.</p></div>',
-        geo: "Аудитория 502 / 5 этаж",
-        price: 0,
-        restriction: "12+",
-      },
-      {
-        id: 3,
-        date: "2025-07-20 00:00:00",
-        title: "«Бабушкины квадраты». Мастер-класс по вязанию",
-        text: '<div><p>Многоцветные бабушкины квадраты — это эффективный способ использовать небольшое количество пряжи, оставшейся от других проектов, а базовые мотивы бабушкиных квадратов не требуют особых навыков для выполнения.</p><p>Название технологии отсылает к изделиям пожилых мастериц, но не всё так просто!</p><p>Модели одежды с использованием бабушкиных квадратов не раз представлялись на неделях высокой моды, печатались в глянцевых журналах и циркулировали в массмаркетах. А квадраты-модули соединяются в юбки, платья, гольфы, пледы и даже в чехлы для табуреток!</p><p>Приходите на мастер-класс, чтобы научиться премудростям техники и хорошо провести время. Чтобы вам было комфортно, желательно иметь хотя бы начальный уровень навыков вязания.</p><p>Если у вас есть крючки и вязаные вещи, которые не жалко распустить, — приносите!</p><p>Ведущая мастер-класса — Наталья Сенаторова, эксперт Санкт-Петербургского культурного форума, основательница бренда вязаных изделий «Блаж Борисовны».<br></p><p class="">Пожалуйста, не забудьте зарегистрироваться на встречу. В случае переноса или отмены мастер-класса мы отправим вам письмо на указанный электронный адрес.</p></div>',
-        geo: "Аудитория 502 / 5 этаж",
-        price: 0,
-        restriction: "12+",
-      },
-    ],
-    total: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [view, setView] = useState("mozaic");
   const params = useParams();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [selectedTag, setSelectedTag] = useState(null);
   const [changedTag, setChangedTag] = useState([]);
   const [initDate, setInitDate] = useState({
-    startDate: null,
-    endDate: null,
+    from: null,
+    to: null,
   });
+  const dispatch = useDispatch();
+  const events = useSelector(({ events }) => events);
 
   // Утилиты для форматирования
   const formatDate = (dateString) => {
@@ -107,72 +76,52 @@ const AfishaPage = ({
     };
   };
 
-  const createBackgroundImageUrl = useCallback((pictureId) => {
-    return pictureId ? `//nekrasovka.ru/img/${pictureId}/medium` : "none";
-  }, []);
-
-  const isEventCancelled = useCallback((event) => {
-    return event.geo === CONFIG.CANCELLED_EVENT_TEXT;
-  }, []);
-
-  const fetchEvents = async ({ page, count, startDate, endDate }) => {
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}events`,
-        { page, count, startDate, endDate },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      if (response.data.success) {
-        const { data, total } = response.data;
-
-        const newEvents = page === 1 ? data : [...events.data, ...data];
-        setEvents({ data: newEvents, total });
-        setError(null);
-      }
-    } catch (error) {
-      console.error(`${CONFIG.ERROR_MESSAGE}:`, error);
-      setError(CONFIG.ERROR_MESSAGE);
-    } finally {
-      setLoading(false);
-    }
+  const fetchEvents = ({
+    offset = page * tracks,
+    limit = tracks,
+    from = null,
+    to = null,
+  }) => {
+    dispatch(
+      fetchEventsRequest({
+        type: "afishaEvent",
+        limit,
+        from,
+        to,
+        offset,
+      }),
+    );
   };
 
   // Загрузка событий
   useEffect(() => {
-    fetchEvents({ page, count: tracks });
+    fetchEvents({});
   }, [tracks]);
-
-  useEffect(() => {
-    fetchEvents({
-      page,
-      count: tracks,
-      startDate: initDate.startDate,
-      endDate: initDate.endDate,
-    });
-  }, [initDate]);
 
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchEvents({ page: page + 1, count: tracks });
+    fetchEvents({ offset: page + 1, limit: tracks });
   };
 
   const handleTag = (tagIndex) => {
     setSelectedTag(tagIndex === selectedTag ? null : tagIndex);
   };
 
-  const handleCalendar = (startDate, endDate) => {
-    startDate = formatCalendarDate(startDate);
-    endDate = formatCalendarDate(endDate);
-    const date = `${startDate.date} - ${endDate.date}`;
+  const handleCalendar = (from, to) => {
+    const fromDate = formatCalendarDate(from).date;
+    const toDate = formatCalendarDate(to).date;
+    const fromInit = formatCalendarDate(from).init;
+    const toInit = formatCalendarDate(to).init;
+
+    setInitDate({ from, to });
+    fetchEvents({
+      from: fromInit,
+      to: toInit,
+    });
+
+    const date = `${fromDate} - ${toDate}`;
 
     setChangedTag([{ key: "date", value: date }]);
-    setInitDate({ startDate: startDate.init, endDate: endDate.init });
     setSelectedTag(null);
   };
 
@@ -181,18 +130,19 @@ const AfishaPage = ({
 
     if (key === null) {
       setChangedTag([]);
-      setInitDate({ startDate: null, endDate: null });
+      setInitDate({ from: null, to: null });
+      fetchEvents({});
     } else {
       const newChangedTag = changedTag.filter((item) => item.key !== key);
       setChangedTag(newChangedTag);
     }
   };
 
-  if (error) {
+  if (events.status === "failed") {
     return (
       <AfishaContainerStyled>
         <AfishaWrapperStyled>
-          <ErrorMessageStyled>{error}</ErrorMessageStyled>
+          <ErrorMessageStyled>{events.error}</ErrorMessageStyled>
         </AfishaWrapperStyled>
       </AfishaContainerStyled>
     );
@@ -253,43 +203,39 @@ const AfishaPage = ({
         {selectedTag === "date" && (
           <DateRangeCalendar
             onApply={handleCalendar}
-            initialStartDate={initDate.startDate}
-            initialEndDate={initDate.endDate}
+            initialStartDate={initDate.from}
+            initialEndDate={initDate.to}
           />
         )}
         <AfishaMainStyled $view={view}>
           {view === "mozaic" &&
-            events.data.map((event, index) => (
+            events.items.map((event) => (
               <EventCard
                 key={event.id}
-                event={event}
-                loading={loading}
-                index={index}
+                event={event.content}
+                loading={events.status === "loading"}
                 formatDate={formatDate}
                 formatTime={formatTime}
                 formatUrl={formatUrl}
-                createBackgroundImageUrl={createBackgroundImageUrl}
-                isEventCancelled={isEventCancelled}
                 projectId={params.projectId}
+                eventId={event.id}
               />
             ))}
           {view === "list" &&
-            events.data.map((event, index) => (
+            events.items.map((event) => (
               <EventList
                 key={event.id}
-                event={event}
-                loading={loading}
-                index={index}
+                event={event.content}
+                loading={events.status === "loading"}
                 formatDate={formatDate}
                 formatTime={formatTime}
                 formatUrl={formatUrl}
-                createBackgroundImageUrl={createBackgroundImageUrl}
-                isEventCancelled={isEventCancelled}
                 projectId={params.projectId}
+                eventId={event.id}
               />
             ))}
         </AfishaMainStyled>
-        {events.total > events.data.length && (
+        {events.total > events.items.length && (
           <LoadMoreButton onClick={handleLoadMore}>
             + Показать ещё
           </LoadMoreButton>

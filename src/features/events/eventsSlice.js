@@ -4,6 +4,8 @@ const initialState = {
   items: [],
   status: "idle",
   error: null,
+  total: 0,
+  offset: 0,
 };
 
 const eventsSlice = createSlice({
@@ -17,7 +19,10 @@ const eventsSlice = createSlice({
     },
     fetchEventsSuccess(state, action) {
       state.status = "succeeded";
-      state.items = action.payload;
+      state.items = action.payload.data;
+      state.total = action.payload.total;
+      state.limit = action.payload.limit;
+      state.offset = action.payload.offset;
       state.error = null;
     },
     fetchEventsFailure(state, action) {

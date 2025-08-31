@@ -14,7 +14,6 @@ import { calculateBlockWidth } from "../../../../helpers";
 import { fetchEvents } from "./event.page.utils";
 
 const EventPage = ({
-  blockId,
   backgroundColor,
   paddingTop,
   paddingBottom,
@@ -83,7 +82,6 @@ const EventPage = ({
           <EventPagePreview loading={loading} event={event} />
         ) : (
           <EventPageConstructor
-            blockId={blockId}
             event={content}
             setEvent={setEvent}
             backgroundColor={backgroundColor}

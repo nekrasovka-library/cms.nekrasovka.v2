@@ -13,31 +13,30 @@ import { DateTextStyled, WeekdayStyled } from "../EventCard/event.card.styles";
 
 const EventList = ({
   event,
-  index,
   formatDate,
   formatTime,
-  createBackgroundImageUrl,
-  isEventCancelled,
   loading,
+  projectId,
+  eventId,
 }) => {
   const { dateText, weekday } = formatDate(event.date);
   const time = formatTime(event.time_start);
-  const backgroundImageUrl = createBackgroundImageUrl(event.picture_id);
-  const eventCancelled = isEventCancelled(event);
-  const eventText = event.text.replace(/<[^>]*>/g, "");
+  const backgroundImageUrl =
+    process.env.REACT_APP_IMAGES_URL + event.picture_id + "/medium";
+  const eventText = event.text[0].replace(/<[^>]*>/g, "");
 
   useEffect(() => {
-    if (eventCancelled) {
+    if (event.canceled) {
       // Добавляем стили для отмененного события
       const style = document.createElement("style");
-      style.textContent = `.event-card-${index}.error::before { background-image: url('${backgroundImageUrl}'); }`;
+      style.textContent = `.event-card-${eventId}.error::before { background-image: url('${backgroundImageUrl}'); }`;
       document.head.appendChild(style);
 
       return () => {
         document.head.removeChild(style);
       };
     }
-  }, [eventCancelled, backgroundImageUrl, index]);
+  }, [event.canceled, backgroundImageUrl, eventId]);
 
   return (
     <EventListStyled>
@@ -56,9 +55,12 @@ const EventList = ({
           {event.geo}
         </LocationTextStyled>
       </DateTimeSectionStyled>
-      <TitleSectionStyled as={Link} to={`${event.id}`}>
+      <TitleSectionStyled
+        as={Link}
+        to={`${projectId ? "/projects/" + projectId : ""}/103/${event.id}`}
+      >
         <EventTitleStyled>{event.title}</EventTitleStyled>
-        {!eventCancelled && (
+        {!event.canceled && (
           <EventSubtitleStyled>{eventText}</EventSubtitleStyled>
         )}
       </TitleSectionStyled>

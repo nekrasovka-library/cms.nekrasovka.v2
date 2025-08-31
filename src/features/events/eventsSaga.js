@@ -4,11 +4,11 @@ import {
   fetchEventsSuccess,
   fetchEventsFailure,
 } from "./eventsSlice";
-import { apiFetchMenu } from "../menus/menusApi";
+import { apiFetchEvents } from "./eventsApi";
 
-export function* handleFetchEvents() {
+export function* handleFetchEvents(params) {
   try {
-    const data = yield call(apiFetchMenu);
+    const data = yield call(apiFetchEvents, params);
     yield put(fetchEventsSuccess(data));
   } catch (err) {
     yield put(fetchEventsFailure(err?.message || "Failed to load"));

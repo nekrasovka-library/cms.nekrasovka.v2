@@ -16,7 +16,8 @@ import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import { Link, useParams } from "react-router-dom";
 import { CONFIG, MONTHS, WEEKDAYS } from "./afisha.main.constants";
 import { calculateBlockWidth } from "../../../../helpers";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEventsRequest } from "../../../../features/events/eventsSlice";
 
 const AfishaMain = ({
   gap = CONFIG.DEFAULT_GAP,
@@ -27,41 +28,8 @@ const AfishaMain = ({
   paddingBottom,
 }) => {
   maxWidth = calculateBlockWidth(maxWidth);
-  const [events, setEvents] = useState({
-    data: [
-      {
-        id: 1,
-        date: "2025-07-20 00:00:00",
-        title: "«Бабушкины квадраты». Мастер-класс по вязанию",
-        text: '<div><p>Многоцветные бабушкины квадраты — это эффективный способ использовать небольшое количество пряжи, оставшейся от других проектов, а базовые мотивы бабушкиных квадратов не требуют особых навыков для выполнения.</p><p>Название технологии отсылает к изделиям пожилых мастериц, но не всё так просто!</p><p>Модели одежды с использованием бабушкиных квадратов не раз представлялись на неделях высокой моды, печатались в глянцевых журналах и циркулировали в массмаркетах. А квадраты-модули соединяются в юбки, платья, гольфы, пледы и даже в чехлы для табуреток!</p><p>Приходите на мастер-класс, чтобы научиться премудростям техники и хорошо провести время. Чтобы вам было комфортно, желательно иметь хотя бы начальный уровень навыков вязания.</p><p>Если у вас есть крючки и вязаные вещи, которые не жалко распустить, — приносите!</p><p>Ведущая мастер-класса — Наталья Сенаторова, эксперт Санкт-Петербургского культурного форума, основательница бренда вязаных изделий «Блаж Борисовны».<br></p><p class="">Пожалуйста, не забудьте зарегистрироваться на встречу. В случае переноса или отмены мастер-класса мы отправим вам письмо на указанный электронный адрес.</p></div>',
-        geo: "Аудитория 502 / 5 этаж",
-        price: 0,
-        restriction: "12+",
-      },
-      {
-        id: 2,
-        date: "2025-07-20 00:00:00",
-        title: "«Бабушкины квадраты». Мастер-класс по вязанию",
-        text: '<div><p>Многоцветные бабушкины квадраты — это эффективный способ использовать небольшое количество пряжи, оставшейся от других проектов, а базовые мотивы бабушкиных квадратов не требуют особых навыков для выполнения.</p><p>Название технологии отсылает к изделиям пожилых мастериц, но не всё так просто!</p><p>Модели одежды с использованием бабушкиных квадратов не раз представлялись на неделях высокой моды, печатались в глянцевых журналах и циркулировали в массмаркетах. А квадраты-модули соединяются в юбки, платья, гольфы, пледы и даже в чехлы для табуреток!</p><p>Приходите на мастер-класс, чтобы научиться премудростям техники и хорошо провести время. Чтобы вам было комфортно, желательно иметь хотя бы начальный уровень навыков вязания.</p><p>Если у вас есть крючки и вязаные вещи, которые не жалко распустить, — приносите!</p><p>Ведущая мастер-класса — Наталья Сенаторова, эксперт Санкт-Петербургского культурного форума, основательница бренда вязаных изделий «Блаж Борисовны».<br></p><p class="">Пожалуйста, не забудьте зарегистрироваться на встречу. В случае переноса или отмены мастер-класса мы отправим вам письмо на указанный электронный адрес.</p></div>',
-        geo: "Аудитория 502 / 5 этаж",
-        price: 0,
-        restriction: "12+",
-      },
-      {
-        id: 3,
-        date: "2025-07-20 00:00:00",
-        title: "«Бабушкины квадраты». Мастер-класс по вязанию",
-        text: '<div><p>Многоцветные бабушкины квадраты — это эффективный способ использовать небольшое количество пряжи, оставшейся от других проектов, а базовые мотивы бабушкиных квадратов не требуют особых навыков для выполнения.</p><p>Название технологии отсылает к изделиям пожилых мастериц, но не всё так просто!</p><p>Модели одежды с использованием бабушкиных квадратов не раз представлялись на неделях высокой моды, печатались в глянцевых журналах и циркулировали в массмаркетах. А квадраты-модули соединяются в юбки, платья, гольфы, пледы и даже в чехлы для табуреток!</p><p>Приходите на мастер-класс, чтобы научиться премудростям техники и хорошо провести время. Чтобы вам было комфортно, желательно иметь хотя бы начальный уровень навыков вязания.</p><p>Если у вас есть крючки и вязаные вещи, которые не жалко распустить, — приносите!</p><p>Ведущая мастер-класса — Наталья Сенаторова, эксперт Санкт-Петербургского культурного форума, основательница бренда вязаных изделий «Блаж Борисовны».<br></p><p class="">Пожалуйста, не забудьте зарегистрироваться на встречу. В случае переноса или отмены мастер-класса мы отправим вам письмо на указанный электронный адрес.</p></div>',
-        geo: "Аудитория 502 / 5 этаж",
-        price: 0,
-        restriction: "12+",
-      },
-    ],
-    total: 0,
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const events = useSelector(({ events }) => events);
   const [scrollIndex, setScrollIndex] = useState(1);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const params = useParams();
@@ -106,17 +74,13 @@ const AfishaMain = ({
     return pictureId ? `//nekrasovka.ru/img/${pictureId}/medium` : "none";
   }, []);
 
-  const isEventCancelled = useCallback((event) => {
-    return event.geo === CONFIG.CANCELLED_EVENT_TEXT;
-  }, []);
-
   // Навигация
   const updateNavigationButtons = useCallback(() => {
     if (windowWidth > CONFIG.DESKTOP_BREAKPOINT) {
       const showPrev = scrollIndex > 1;
       const showNext =
-        events.data.length > CONFIG.ITEMS_PER_PAGE &&
-        scrollIndex < Math.ceil(events.data.length / CONFIG.ITEMS_PER_PAGE);
+        events.items.length > CONFIG.ITEMS_PER_PAGE &&
+        scrollIndex < Math.ceil(events.items.length / CONFIG.ITEMS_PER_PAGE);
 
       if (prevButtonRef.current) {
         prevButtonRef.current.style.display = showPrev ? "flex" : "none";
@@ -125,7 +89,7 @@ const AfishaMain = ({
         nextButtonRef.current.style.display = showNext ? "flex" : "none";
       }
     }
-  }, [scrollIndex, events.data.length, windowWidth]);
+  }, [scrollIndex, events.items.length, windowWidth]);
 
   const handleScroll = useCallback((scrollAmount) => {
     if (eventsContainerRef.current) {
@@ -146,25 +110,13 @@ const AfishaMain = ({
     setScrollIndex((prev) => prev - 1);
   }, [handleScroll]);
 
-  const fetchEvents = async (count) => {
-    try {
-      setLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API}events`, {
-        count,
-      });
-
-      if (response.data.success) {
-        const { data, total } = response.data;
-
-        setEvents({ data, total });
-        setError(null);
-      }
-    } catch (error) {
-      console.error("Ошибка при загрузке событий:", error);
-      setError(CONFIG.ERROR_MESSAGE);
-    } finally {
-      setLoading(false);
-    }
+  const fetchEvents = async (limit) => {
+    dispatch(
+      fetchEventsRequest({
+        type: "afishaEvent",
+        limit,
+      }),
+    );
   };
 
   // Предотвращение прокрутки на десктопе
@@ -213,11 +165,11 @@ const AfishaMain = ({
     updateNavigationButtons();
   }, [updateNavigationButtons]);
 
-  if (error) {
+  if (events.status === "failed") {
     return (
       <AfishaContainerStyled>
         <AfishaWrapperStyled>
-          <ErrorMessageStyled>{error}</ErrorMessageStyled>
+          <ErrorMessageStyled>{events.error}</ErrorMessageStyled>
         </AfishaWrapperStyled>
       </AfishaContainerStyled>
     );
@@ -253,17 +205,16 @@ const AfishaMain = ({
             <Icon icon="arrowCarousel" />
           </AfishaButtonRightStyled>
           <EventsContainerStyled ref={eventsContainerRef} $gap={gap}>
-            {events.data.map((event, index) => (
+            {events.items.map((event) => (
               <EventCard
                 key={event.id}
-                event={event}
-                loading={loading}
-                index={index}
+                eventId={event.id}
+                event={event.content}
+                loading={events.status === "loading"}
                 formatDate={formatDate}
                 formatTime={formatTime}
                 formatUrl={formatUrl}
                 createBackgroundImageUrl={createBackgroundImageUrl}
-                isEventCancelled={isEventCancelled}
                 projectId={params.projectId}
               />
             ))}

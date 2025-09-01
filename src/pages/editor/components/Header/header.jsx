@@ -39,7 +39,7 @@ const Header = ({ backgroundColor, maxWidth, paddingTop, paddingBottom }) => {
         </MobileIconSection>
 
         <WorkingHoursSection>
-          <ClockIcon src="/clock.png" alt="Часы работы" />
+          <Icon icon="clock" />
           <WorkingHoursInfo>
             <StatusText>Главное здание сегодня: санитарный день</StatusText>
             <AddressLink
@@ -49,7 +49,7 @@ const Header = ({ backgroundColor, maxWidth, paddingTop, paddingBottom }) => {
               aria-label="Адреса и часы работы библиотек"
             >
               <span>Адреса и часы работы</span>
-              <Icon icon="clock" />
+              <Icon icon="arrowRightLong" />
             </AddressLink>
           </WorkingHoursInfo>
         </WorkingHoursSection>

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
 const { Op, where, literal } = require("sequelize");
+const { getPageWithFilteredBlocks } = require("../helpers");
 
 // GET /api/blocks - получить список блоков с фильтрами и пагинацией
 router.get("/", async (req, res) => {
@@ -76,7 +77,7 @@ router.post("/", async (req, res) => {
       }
     }
 
-    await models.Block.create({
+    const block = await models.Block.create({
       type,
       settings,
       styles,
@@ -85,10 +86,11 @@ router.post("/", async (req, res) => {
       pageId,
     });
 
-    const page = await models.Page.findByPk(pageId, {
-      include: [{ model: models.Block, as: "blocks" }],
-      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
-    });
+    const page = await getPageWithFilteredBlocks(pageId, block.id);
+
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
 
     res.status(201).json(page);
   } catch (e) {
@@ -138,10 +140,11 @@ router.put("/:id", async (req, res) => {
 
     await block.save();
 
-    const page = await models.Page.findByPk(block.pageId, {
-      include: [{ model: models.Block, as: "blocks" }],
-      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
-    });
+    const page = await getPageWithFilteredBlocks(block.pageId, id);
+
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
 
     res.status(201).json(page);
   } catch (e) {
@@ -170,10 +173,11 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
-    const page = await models.Page.findByPk(block.pageId, {
-      include: [{ model: models.Block, as: "blocks" }],
-      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
-    });
+    const page = await getPageWithFilteredBlocks(block.pageId);
+
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
 
     res.status(201).json(page);
   } catch (e) {

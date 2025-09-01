@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
+const { getPageWithFilteredBlocks } = require("../helpers");
 const { Op } = require("sequelize");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
@@ -22,9 +23,8 @@ async function detachChildrenFromDeleted(pageId) {
 }
 
 // GET /api/pages/:id - получить страницу
-router.get("/:id/:blockId", async (req, res) => {
+router.get("/:id/:blockId?", async (req, res) => {
   try {
-    // поддерживаем blockId как в params (/api/pages/:id/:blockId), так и в query (?blockId=...)
     const id = Number.parseInt(req.params.id, 10);
     const rawBlockId =
       typeof req.params.blockId !== "undefined"
@@ -32,43 +32,75 @@ router.get("/:id/:blockId", async (req, res) => {
         : req.query.blockId;
     const blockId = Number.parseInt(rawBlockId, 10);
 
-    // Получаем страницу с ВСЕМИ блоками, кроме типа afishaEvent
+    let WHERE = {};
+    let includeBlock = null;
+    const EXCLUDE_TYPES = ["afishaEvent"];
+
+    // Find excluded block
+    const excludeBlock = await models.Block.findOne({
+      where: {
+        pageId: id,
+        type: EXCLUDE_TYPES,
+      },
+    });
+
+    // Set WHERE clause if excluded block exists
+    if (!!excludeBlock) {
+      WHERE = {
+        where: {
+          type: { [Op.ne]: EXCLUDE_TYPES },
+        },
+        required: false,
+      };
+    }
+
+    // Get page with filtered blocks
     const page = await models.Page.findByPk(id, {
       include: [
         {
           model: models.Block,
           as: "blocks",
-          where: {
-            type: { [Op.ne]: "afishaEvent" },
-          },
-          required: false, // чтобы страница вернулась даже если нет таких блоков
+          ...WHERE,
         },
       ],
       order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
     });
 
-    if (!page) return res.status(404).json({ error: "Page not found" });
-
-    // Находим ровно один нужный afishaEvent-блок этой страницы, если передан валидный blockId
-    let eventBlock = null;
+    // Handle specific block inclusion
     if (!Number.isNaN(blockId)) {
-      eventBlock = await models.Block.findOne({
+      includeBlock = await models.Block.findOne({
         where: {
           id: blockId,
           pageId: id,
-          type: "afishaEvent",
+          type: EXCLUDE_TYPES,
         },
       });
+    } else {
+      if (excludeBlock) {
+        const variant = await models.Variant.findOne({
+          where: {
+            type: excludeBlock.type,
+          },
+        });
+
+        includeBlock = await models.Block.create({
+          pageId: id,
+          type: variant.type,
+          content: variant.content,
+          styles: variant.styles,
+          settings: variant.settings,
+          position: excludeBlock.position,
+        });
+      }
     }
 
-    // Формируем финальный ответ: все НЕ afishaEvent + один нужный afishaEvent (если есть)
+    // Merge and sort blocks
     const json = page.toJSON();
     const nonAfishaBlocks = Array.isArray(json.blocks) ? json.blocks : [];
-    const merged = eventBlock
-      ? [...nonAfishaBlocks, eventBlock]
+    const merged = includeBlock
+      ? [...nonAfishaBlocks, includeBlock]
       : nonAfishaBlocks;
 
-    // Финальная сортировка по position
     merged.sort((a, b) => {
       const pa = typeof a.position === "number" ? a.position : 0;
       const pb = typeof b.position === "number" ? b.position : 0;

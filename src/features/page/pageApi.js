@@ -1,11 +1,11 @@
 const baseApiUrl = process.env.REACT_APP_API;
 
 export function apiFetchPage({ payload }) {
-  const url = `${baseApiUrl}/api/pages/${payload.id}/${payload.blockId}`;
+  const url = `${baseApiUrl}/api/pages/${payload.id}${payload.blockId ? `/${payload.blockId}` : ""}`;
   return fetch(url).then(async (res) => {
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(text || "Failed to fetch templates");
+      throw new Error(text || "Failed to fetch page");
     }
     return res.json();
   });

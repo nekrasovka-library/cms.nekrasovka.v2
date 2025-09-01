@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AuthorStyled,
   ButtonsCalendarContainerMobileStyled,
@@ -6,7 +6,7 @@ import {
   DateTimeStyled,
   EventCanceled,
   EventImageMobileStyled,
-  EventTextStyled,
+  EventTitleStyled,
   LeftSectionStyled,
   LocationTextStyled,
   RestrictionStyled,
@@ -22,23 +22,29 @@ import { formatDate, formatTime } from "../../../../helpers";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
 import ImagePreview from "../Image/image.preview";
+import { useParams, useNavigate } from "react-router-dom";
 
 const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   const dispatch = useDispatch();
   const today = event.date || new Date();
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
-
+  const params = useParams();
+  const navigate = useNavigate();
   const updateText = (newText) => {
     dispatch(
       updateBlockRequest({
         id: blockId,
-        content: {
-          text: newText,
-        },
+        content: { text: newText },
       }),
     );
   };
+
+  useEffect(() => {
+    if (!params.blockId && blockId) {
+      navigate(`./${blockId}`, { replace: true });
+    }
+  }, []);
 
   return (
     <>
@@ -68,7 +74,7 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
           <ImagePreview text={event.picture_id} borderRadius="5" />
         </EventImageMobileStyled>
         <TextStyled>
-          <EventTextStyled>{event.title}</EventTextStyled>
+          <EventTitleStyled>{event.title}</EventTitleStyled>
         </TextStyled>
         {/*<TextStyled>*/}
         {/*  <EventTextStyled>*/}

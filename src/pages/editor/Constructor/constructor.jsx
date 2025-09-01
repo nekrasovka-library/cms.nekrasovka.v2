@@ -20,14 +20,14 @@ const Constructor = () => {
   const page = useSelector(({ page }) => page);
 
   useEffect(() => {
-    if (pageId) {
-      dispatch(fetchPageRequest({ id: pageId, blockId }));
+    if (!!pageId) {
+      dispatch(fetchPageRequest({ id: pageId, ...(blockId && { blockId }) }));
     }
 
     return () => {
       dispatch(resetPage());
     };
-  }, [dispatch, pageId, blockId]);
+  }, [pageId, blockId, dispatch]);
 
   const CONSTRUCTOR_COMPONENTS = {
     text: Text,

@@ -88,17 +88,6 @@ const ERROR_OVERLAY_STYLES = `
   }
 `;
 
-const AfishaContainerStyled = styled.div`
-  max-width: ${({ $maxWidth }) => ($maxWidth ? `${$maxWidth}px` : "100%")};
-  margin: 0 auto;
-`;
-
-const ErrorMessageStyled = styled.div`
-  text-align: center;
-  padding: ${AFISHA_THEME.spacingXxxl};
-  color: ${AFISHA_THEME.errorColor};
-`;
-
 const DateTextStyled = styled.span`
   font-weight: ${AFISHA_THEME.fontWeightMedium};
   margin-right: 5px;
@@ -433,8 +422,6 @@ const EventTextStyled = styled.div`
 `;
 
 export {
-  AfishaContainerStyled,
-  ErrorMessageStyled,
   DateTextStyled,
   DateTimeStyled,
   LocationTextStyled,

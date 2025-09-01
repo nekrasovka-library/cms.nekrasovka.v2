@@ -29,6 +29,7 @@ const AfishaPage = ({
   maxWidth,
   paddingTop,
   paddingBottom,
+  settings,
 }) => {
   maxWidth = calculateBlockWidth(maxWidth);
   const [view, setView] = useState("mozaic");
@@ -219,6 +220,7 @@ const AfishaPage = ({
                 formatUrl={formatUrl}
                 projectId={params.projectId}
                 eventId={event.id}
+                childPageId={settings.child_page_id}
               />
             ))}
           {view === "list" &&
@@ -232,6 +234,7 @@ const AfishaPage = ({
                 formatUrl={formatUrl}
                 projectId={params.projectId}
                 eventId={event.id}
+                childPageId={settings.child_page_id}
               />
             ))}
         </AfishaMainStyled>

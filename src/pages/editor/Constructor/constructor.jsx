@@ -12,22 +12,22 @@ import Button from "../components/Button/button.jsx";
 import AfishaMain from "../components/AfishaMain/afisha.main";
 import AfishaPage from "../components/AfishaPage/afisha.page";
 import Text from "../components/Text/text";
-import EventPage from "../components/EventPage/event.page";
+import AfishaEvent from "../components/AfishaEvent/afisha.event";
 
 const Constructor = () => {
   const dispatch = useDispatch();
-  const { pageId } = useParams();
+  const { pageId, blockId } = useParams();
   const page = useSelector(({ page }) => page);
 
   useEffect(() => {
     if (pageId) {
-      dispatch(fetchPageRequest({ id: pageId }));
+      dispatch(fetchPageRequest({ id: pageId, blockId }));
     }
 
     return () => {
       dispatch(resetPage());
     };
-  }, [dispatch, pageId]);
+  }, [dispatch, pageId, blockId]);
 
   const CONSTRUCTOR_COMPONENTS = {
     text: Text,
@@ -39,7 +39,7 @@ const Constructor = () => {
     footer: Footer,
     afishaMain: AfishaMain,
     afishaPage: AfishaPage,
-    afishaEvent: EventPage,
+    afishaEvent: AfishaEvent,
   };
 
   return (

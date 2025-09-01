@@ -182,4 +182,24 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// GET /api/blocks/:id - получить один блок по идентификатору
+router.get("/:id", async (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+
+    const block = await models.Block.findByPk(id);
+    if (!block) {
+      return res.status(404).json({ error: "Block not found" });
+    }
+
+    res.json(block);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to fetch block" });
+  }
+});
+
 module.exports = router;

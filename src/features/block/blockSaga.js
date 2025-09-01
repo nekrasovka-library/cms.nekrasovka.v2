@@ -1,14 +1,29 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { apiCreateBlock, apiDeleteBlock, apiUpdateBlock } from "./blockApi";
+import {
+  apiCreateBlock,
+  apiDeleteBlock,
+  apiFetchBlock,
+  apiUpdateBlock,
+} from "./blockApi";
 import {
   createBlockRequest,
   deleteBlockRequest,
   fetchBlockFailure,
+  fetchBlockRequest,
   updateBlockRequest,
 } from "./blockSlice";
 import { fetchPageSuccess } from "../page/pageSlice";
 
 export function* handleFetchBlock(params) {
+  try {
+    const data = yield call(apiFetchBlock, params);
+    yield put(fetchPageSuccess(data));
+  } catch (err) {
+    yield put(fetchBlockFailure(err?.message || "Failed to load"));
+  }
+}
+
+export function* handleCreateBlock(params) {
   try {
     const data = yield call(apiCreateBlock, params);
     yield put(fetchPageSuccess(data));
@@ -36,7 +51,8 @@ export function* handleUpdateBlock(params) {
 }
 
 export default function* pageSaga() {
-  yield takeLatest(createBlockRequest.type, handleFetchBlock);
+  yield takeLatest(fetchBlockRequest.type, handleFetchBlock);
+  yield takeLatest(createBlockRequest.type, handleCreateBlock);
   yield takeLatest(deleteBlockRequest.type, handleDeleteBlock);
   yield takeLatest(updateBlockRequest.type, handleUpdateBlock);
 }

@@ -13,7 +13,6 @@ import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import { Link, useLocation } from "react-router-dom";
 import ConstructorHeaderDropdown from "./components/constructor.header.dropdown.jsx";
 import { fetchProjectRequest } from "../../../../features/project/projectSlice";
-import { fetchPageRequest } from "../../../../features/page/pageSlice";
 import { setPreviewVisibility } from "../../../../features/visibility/visibilitySlice";
 
 const ConstructorHeader = () => {
@@ -36,11 +35,12 @@ const ConstructorHeader = () => {
     const params = location.pathname.split("/");
 
     if (params[2] && params[3]) {
-      dispatch(fetchProjectRequest({ id: params[2] }));
-      dispatch(fetchPageRequest({ id: params[3] }));
+      if (project.status !== "succeeded") {
+        dispatch(fetchProjectRequest({ id: params[2] }));
+      }
       setIsProjectOpen(true);
     } else setIsProjectOpen(false);
-  }, [dispatch, location]);
+  }, [dispatch, location, project]);
 
   return (
     <HeaderContainer>

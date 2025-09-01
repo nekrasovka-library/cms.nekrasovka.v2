@@ -92,10 +92,8 @@ const EventCardStyled = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: ${AFISHA_THEME.borderRadius};
-  background-image: ${(props) =>
-    props.$backgroundImage !== "none"
-      ? `url('${props.$backgroundImage}')`
-      : "none"};
+  background-image: ${({ $backgroundImage }) =>
+    $backgroundImage ? `url('${$backgroundImage}')` : "none"};
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

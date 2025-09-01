@@ -87,8 +87,9 @@ const Editor = ({
   }, [isContentChanged, blockFocused]);
 
   useEffect(() => {
-    if (tracks === textArray.length) return;
-    updateTextByTracks();
+    if (tracks !== undefined && tracks !== textArray.length) {
+      updateTextByTracks();
+    }
   }, [tracks]);
 
   return (

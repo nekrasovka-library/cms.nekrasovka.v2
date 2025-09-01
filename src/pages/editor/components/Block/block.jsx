@@ -36,11 +36,9 @@ const Block = ({
     ({ visibility }) => visibility,
   );
   const [isBlankBlockFocused, setIsBlankBlockFocused] = useState(!blockId);
-  const FIXED_BLOCK_TYPES = ["header", "footer"];
 
   const canMoveUp = () => position !== 1;
   const canMoveDown = () => position !== totalBlocks;
-  const isFixedBlock = () => FIXED_BLOCK_TYPES.includes(type);
 
   const isBlankBlockActive =
     (isBlankBlockFocused &&
@@ -129,27 +127,25 @@ const Block = ({
 
       {blockId && (
         <BlankBlockActionButtons $isBlankBlockFocused={isBlankBlockActive}>
-          {!isFixedBlock() && (
-            <Tooltip text="Контент">
-              <Icon icon="edit" type="button" onClick={handleBlockContent} />
-            </Tooltip>
-          )}
+          <Tooltip text="Контент">
+            <Icon icon="edit" type="button" onClick={handleBlockContent} />
+          </Tooltip>
 
-          {!isFixedBlock() && (
-            <Tooltip text="Оформление">
-              <Icon
-                icon="settings"
-                type="button"
-                onClick={handleBlockDecoration}
-              />
-            </Tooltip>
-          )}
+          <Tooltip text="Оформление">
+            <Icon
+              icon="settings"
+              type="button"
+              onClick={handleBlockDecoration}
+            />
+          </Tooltip>
 
-          {!isFixedBlock() && (
-            <Tooltip text="Дублировать блок">
-              <Icon icon="copy" type="button" onClick={handleCopyBlock} />
-            </Tooltip>
-          )}
+          <Tooltip text="Дублировать блок">
+            <Icon icon="copy" type="button" onClick={handleCopyBlock} />
+          </Tooltip>
+
+          <Tooltip text="Создать блок">
+            <Icon icon="save" type="button" onClick={handleCopyBlock} />
+          </Tooltip>
 
           <Tooltip text="Удалить блок">
             <Icon icon="trash" type="button" onClick={handleDeleteBlock} />

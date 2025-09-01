@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import {
   MONTHS,
   WEEKDAYS,
-} from "../pages/editor/components/EventPage/event.page.constants";
+} from "../pages/editor/components/AfishaEvent/afisha.event.constants";
 
 const useIsMobile = (breakpoint = 700) => {
   // Если "window" недоступен (SSR), считается, что ширина неизвестна. Начальное значение false.

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AFISHA_THEME } from "./event.page.constants";
+import { AFISHA_THEME } from "./afisha.event.constants";
 
 // Извлеченные переменные для медиа-запросов
 const DESKTOP_TABLET_MEDIA = `@media (min-width: ${AFISHA_THEME.breakpointTablet})`;
@@ -134,55 +134,12 @@ const RestrictionStyled = styled.div`
   ${SKELETON_PULSE_ANIMATION};
 `;
 
-const EditInputComponentStyled = styled.div`
-  display: flex;
-  align-items: flex-start;
-`;
-
-const EditInputStyled = styled.input`
-  margin: 0;
-  border: none;
-  outline: none;
-  padding: 0;
-`;
-
-const EditInputRestrictionStyled = styled(EditInputStyled)`
-  width: 35px;
-
-  ${DESKTOP_TABLET_MEDIA} {
-    font-size: 18px;
-  }
-
-  ${MOBILE_MEDIA} {
-    font-size: 12px;
-  }
-`;
-
-const EditInputDateStyled = styled(EditInputStyled)`
-  ${DESKTOP_TABLET_MEDIA} {
-    font-size: 24px;
-  }
-
-  ${MOBILE_MEDIA} {
-    font-size: 14px;
-  }
-`;
-
 const LocationTextStyled = styled.span`
   ${RESPONSIVE_FONT_STYLES}
   ${({ $loading }) =>
     $loading ? SKELETON_BASE_STYLES : "color: inherit; text-decoration: none;"};
   ${SKELETON_PULSE_ANIMATION};
   margin-top: 5px;
-`;
-
-const EditSelectStyled = styled.select`
-  padding: 0;
-  outline: none;
-  border: none;
-  width: fit-content;
-  margin-top: 5px;
-  background-color: rgb(255, 255, 255);
 `;
 
 const TimeStyled = styled.time`
@@ -497,9 +454,4 @@ export {
   EventCanceled,
   EventImageMobileStyled,
   RestrictionStyled,
-  EditInputStyled,
-  EditSelectStyled,
-  EditInputDateStyled,
-  EditInputRestrictionStyled,
-  EditInputComponentStyled,
 };

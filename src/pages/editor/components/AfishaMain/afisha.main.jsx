@@ -26,6 +26,7 @@ const AfishaMain = ({
   maxWidth,
   paddingTop,
   paddingBottom,
+  settings,
 }) => {
   maxWidth = calculateBlockWidth(maxWidth);
   const dispatch = useDispatch();
@@ -216,6 +217,7 @@ const AfishaMain = ({
                 formatUrl={formatUrl}
                 createBackgroundImageUrl={createBackgroundImageUrl}
                 projectId={params.projectId}
+                childPageId={settings.child_page_id}
               />
             ))}
           </EventsContainerStyled>

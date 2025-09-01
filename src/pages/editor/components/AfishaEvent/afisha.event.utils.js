@@ -5,7 +5,7 @@ import {
   formatUrl,
 } from "../../../../helpers";
 import axios from "axios";
-import { CONFIG } from "./event.page.constants";
+import { CONFIG } from "./afisha.event.constants";
 
 export const fetchEvents = async (id) => {
   try {

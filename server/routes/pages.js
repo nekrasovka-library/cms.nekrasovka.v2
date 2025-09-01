@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
+const { Op } = require("sequelize");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
 const PAGE_INCLUDE = {
@@ -21,16 +22,62 @@ async function detachChildrenFromDeleted(pageId) {
 }
 
 // GET /api/pages/:id - получить страницу
-router.get("/:id", async (req, res) => {
+router.get("/:id/:blockId", async (req, res) => {
   try {
+    // поддерживаем blockId как в params (/api/pages/:id/:blockId), так и в query (?blockId=...)
     const id = Number.parseInt(req.params.id, 10);
+    const rawBlockId =
+      typeof req.params.blockId !== "undefined"
+        ? req.params.blockId
+        : req.query.blockId;
+    const blockId = Number.parseInt(rawBlockId, 10);
+
+    // Получаем страницу с ВСЕМИ блоками, кроме типа afishaEvent
     const page = await models.Page.findByPk(id, {
-      include: [{ model: models.Block, as: "blocks" }],
+      include: [
+        {
+          model: models.Block,
+          as: "blocks",
+          where: {
+            type: { [Op.ne]: "afishaEvent" },
+          },
+          required: false, // чтобы страница вернулась даже если нет таких блоков
+        },
+      ],
       order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
     });
 
     if (!page) return res.status(404).json({ error: "Page not found" });
-    res.json(page);
+
+    // Находим ровно один нужный afishaEvent-блок этой страницы, если передан валидный blockId
+    let eventBlock = null;
+    if (!Number.isNaN(blockId)) {
+      eventBlock = await models.Block.findOne({
+        where: {
+          id: blockId,
+          pageId: id,
+          type: "afishaEvent",
+        },
+      });
+    }
+
+    // Формируем финальный ответ: все НЕ afishaEvent + один нужный afishaEvent (если есть)
+    const json = page.toJSON();
+    const nonAfishaBlocks = Array.isArray(json.blocks) ? json.blocks : [];
+    const merged = eventBlock
+      ? [...nonAfishaBlocks, eventBlock]
+      : nonAfishaBlocks;
+
+    // Финальная сортировка по position
+    merged.sort((a, b) => {
+      const pa = typeof a.position === "number" ? a.position : 0;
+      const pb = typeof b.position === "number" ? b.position : 0;
+      return pa - pb;
+    });
+
+    json.blocks = merged;
+
+    return res.json(json);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to fetch page" });

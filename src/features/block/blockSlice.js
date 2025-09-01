@@ -14,6 +14,15 @@ const blockSlice = createSlice({
     updateBlockRequest() {},
     createBlockRequest() {},
     deleteBlockRequest() {},
+    fetchBlockRequest(state) {
+      state.status = "loading";
+      state.error = null;
+    },
+    fetchBlockSuccess(state, action) {
+      state.status = "succeeded";
+      state.items = action.payload;
+      state.error = null;
+    },
     // Success/Failure
     fetchBlockFailure(state, action) {
       state.status = "failed";
@@ -35,6 +44,8 @@ export const {
   deleteBlockRequest,
   updateBlockRequest,
   fetchBlockFailure,
+  fetchBlockSuccess,
+  fetchBlockRequest,
 } = blockSlice.actions;
 
 export default blockSlice.reducer;

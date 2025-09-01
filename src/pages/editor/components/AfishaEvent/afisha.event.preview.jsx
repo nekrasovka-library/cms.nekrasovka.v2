@@ -16,10 +16,10 @@ import {
   TextStyled,
   TimeStyled,
   WeekdayStyled,
-} from "./event.page.styles";
+} from "./afisha.event.styles";
 import ImagePreview from "../Image/image.preview";
 
-const EventPagePreview = ({ event, loading }) => {
+const AfishaEventPreview = ({ event, loading }) => {
   return (
     <>
       <LeftSectionStyled $isEventCancelled={event.canceled} $loading={loading}>
@@ -121,4 +121,4 @@ const EventPagePreview = ({ event, loading }) => {
   );
 };
 
-export default EventPagePreview;
+export default AfishaEventPreview;

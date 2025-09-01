@@ -18,12 +18,29 @@ const EventList = ({
   loading,
   projectId,
   eventId,
+  childPageId,
 }) => {
   const { dateText, weekday } = formatDate(event.date);
   const time = formatTime(event.time_start);
   const backgroundImageUrl =
     process.env.REACT_APP_IMAGES_URL + event.picture_id + "/medium";
-  const eventText = event.text[0].replace(/<[^>]*>/g, "");
+  const eventText = event.text.replace(/<[^>]*>/g, "");
+
+  const buildEventPath = ({ projectId, childPageId, eventId }) => {
+    const parts = [];
+    if (projectId) {
+      parts.push("projects", String(projectId));
+    }
+    if (childPageId) {
+      parts.push(String(childPageId));
+    }
+    if (eventId) {
+      parts.push(String(eventId));
+    }
+    return parts.length ? `/${parts.join("/")}` : "";
+  };
+
+  const eventPath = buildEventPath({ projectId, childPageId, eventId });
 
   useEffect(() => {
     if (event.canceled) {
@@ -55,10 +72,7 @@ const EventList = ({
           {event.geo}
         </LocationTextStyled>
       </DateTimeSectionStyled>
-      <TitleSectionStyled
-        as={Link}
-        to={`${projectId ? "/projects/" + projectId : ""}/103/${event.id}`}
-      >
+      <TitleSectionStyled as={Link} to={eventPath}>
         <EventTitleStyled>{event.title}</EventTitleStyled>
         {!event.canceled && (
           <EventSubtitleStyled>{eventText}</EventSubtitleStyled>

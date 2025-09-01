@@ -16,18 +16,15 @@ import {
   TextStyled,
   TimeStyled,
   WeekdayStyled,
-} from "./event.page.styles";
-import ImageConstructor from "../Image/image.constructor";
+} from "./afisha.event.styles";
 import Editor from "../Editor/editor";
 import { formatDate, formatTime } from "../../../../helpers";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
 import ImagePreview from "../Image/image.preview";
-import { useParams } from "react-router-dom";
 
-const EventPageConstructor = ({ setEvent, event, backgroundColor }) => {
+const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   const dispatch = useDispatch();
-  const { blockId } = useParams();
   const today = event.date || new Date();
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
@@ -68,14 +65,7 @@ const EventPageConstructor = ({ setEvent, event, backgroundColor }) => {
           {event.geo}
         </LocationTextStyled>
         <EventImageMobileStyled $isEventCancelled={!!event.canceled}>
-          <ImageConstructor
-            blockId={blockId}
-            text={event.picture_id}
-            borderRadius="5"
-            updateImage={(newImage) =>
-              setEvent({ ...event, picture_id: newImage })
-            }
-          />
+          <ImagePreview text={event.picture_id} borderRadius="5" />
         </EventImageMobileStyled>
         <TextStyled>
           <EventTextStyled>{event.title}</EventTextStyled>
@@ -154,4 +144,4 @@ const EventPageConstructor = ({ setEvent, event, backgroundColor }) => {
   );
 };
 
-export default EventPageConstructor;
+export default AfishaEventConstructor;

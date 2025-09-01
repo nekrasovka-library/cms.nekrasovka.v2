@@ -8,15 +8,15 @@ const Page = () => {
   const { pageId } = useParams();
   const page = useSelector((state) => state.page);
 
-  useEffect(() => {
-    if (pageId) {
-      dispatch(fetchPageRequest({ id: pageId }));
-    }
-
-    return () => {
-      dispatch(resetPage());
-    };
-  }, [dispatch, pageId]);
+  // useEffect(() => {
+  //   if (pageId) {
+  //     dispatch(fetchPageRequest({ id: pageId }));
+  //   }
+  //
+  //   return () => {
+  //     dispatch(resetPage());
+  //   };
+  // }, [dispatch, pageId]);
 
   return <div>Preview</div>;
 };

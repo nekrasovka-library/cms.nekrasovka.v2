@@ -1,5 +1,16 @@
 const baseApiUrl = process.env.REACT_APP_API;
 
+export function apiFetchBlock({ payload }) {
+  const url = `${baseApiUrl}/api/blocks/${payload.id}`;
+  return fetch(url).then(async (res) => {
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to fetch templates");
+    }
+    return res.json();
+  });
+}
+
 export function apiCreateBlock({ payload }) {
   const url = `${baseApiUrl}/api/blocks`;
   return fetch(url, {

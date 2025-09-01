@@ -2,6 +2,11 @@ const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
 
+const EMPTY_PARENT = { pageId: null, url: "", name: "" };
+const PAGE_INCLUDE = {
+  include: [{ model: models.Page, as: "pages" }],
+};
+
 // GET /api/projects - список проектов
 router.get("/", async (req, res) => {
   try {
@@ -41,6 +46,19 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+async function detachChildrenFromDeleted(pageId) {
+  const childPages = await models.Page.findAll({
+    where: { "settings.parent.pageId": pageId },
+  });
+  for (const childPage of childPages) {
+    childPage.settings = {
+      ...childPage.settings,
+      parent: EMPTY_PARENT,
+    };
+    await childPage.save();
+  }
+}
+
 // PUT /api/projects/:id - изменение проекта
 router.put("/:id", async (req, res) => {
   try {
@@ -52,13 +70,79 @@ router.put("/:id", async (req, res) => {
 
     if (!project) return res.status(404).json({ error: "Project not found" });
 
-    if (typeof url !== "undefined") project.url = url;
-    if (typeof name !== "undefined") project.name = name;
-    if (typeof settings !== "undefined") project.settings = settings;
     if (typeof styles !== "undefined") project.styles = styles;
     if (typeof routes !== "undefined") project.routes = routes;
+    if (typeof url !== "undefined") project.url = url;
+    if (typeof name !== "undefined") project.name = name;
+    if (typeof settings !== "undefined") {
+      if (
+        settings.main_page_id &&
+        project.settings.main_page_id !== settings.main_page_id
+      ) {
+        const pages = await models.Page.findAll({
+          where: { projectId: project.id },
+        });
+
+        for (const page of pages) {
+          if (page.id === settings.main_page_id) {
+            await detachChildrenFromDeleted(page.id);
+
+            page.url = "/";
+            page.settings = {
+              ...page.settings,
+              parent: {
+                pageId: null,
+                url: "",
+                name: "",
+              },
+            };
+
+            await page.save();
+
+            project.routes = project.routes.map((r) => {
+              if (r.id === page.id) {
+                return {
+                  ...r,
+                  path: "/",
+                };
+              } else {
+                return r;
+              }
+            });
+          }
+
+          if (page.id === project.settings.main_page_id) {
+            page.url = `page_${page.id}`;
+            page.settings = {
+              ...page.settings,
+              parent: {
+                pageId: null,
+                url: "",
+                name: "",
+              },
+            };
+
+            await page.save();
+
+            project.routes = project.routes.map((r) => {
+              if (r.id === page.id) {
+                return {
+                  ...r,
+                  path: `page_${page.id}`,
+                };
+              } else {
+                return r;
+              }
+            });
+          }
+        }
+      }
+
+      project.settings = settings;
+    }
 
     await project.save();
+    await project.reload(PAGE_INCLUDE);
 
     res.json(project);
   } catch (e) {

@@ -151,6 +151,8 @@ const EventsContainerStyled = styled.div`
     & > div {
       height: 400px;
       min-width: 380px;
+      max-width: 400px;
+      width: 100%;
     }
   }
 

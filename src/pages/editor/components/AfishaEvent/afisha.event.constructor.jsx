@@ -94,7 +94,7 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
         <AuthorStyled>
           <ImagePreview text={event.author_picture_id} borderRadius="50" />
           <div>
-            {event.author_name}, {event.author_text}
+            <span>{event.author_name},</span> <span> {event.author_text}</span>
           </div>
         </AuthorStyled>
       </LeftSectionStyled>

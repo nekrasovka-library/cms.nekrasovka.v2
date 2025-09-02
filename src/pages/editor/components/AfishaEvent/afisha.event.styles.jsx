@@ -385,10 +385,18 @@ const AuthorStyled = styled.div`
   ${DESKTOP_TABLET_MEDIA} {
     column-gap: 20px;
 
-    div:nth-child(1) {
-      img {
-        width: 74px;
-        height: 74px;
+    div {
+      &:nth-child(1) {
+        img {
+          width: 74px;
+          height: 74px;
+        }
+      }
+
+      &:nth-child(2) {
+        span:nth-child(1) {
+          font-weight: 500;
+        }
       }
     }
   }

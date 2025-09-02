@@ -1,86 +1,61 @@
 const { models } = require("../models");
 const { Op } = require("sequelize");
 
-async function getPageWithFilteredBlocks(id, blockId) {
-  let WHERE = {};
-  let includeBlock = null;
+async function getPageWithFilteredBlocks({ pageId, blockId }) {
   const EXCLUDE_TYPES = ["afishaEvent"];
+  let newBlock;
+  let page;
+  let WHERE = {};
+  let blockIdNum;
 
-  // Find excluded block
-  const excludeBlock = await models.Block.findOne({
-    where: {
-      pageId: id,
-      type: EXCLUDE_TYPES,
-    },
+  const includedBlock = await models.Block.findOne({
+    where: { type: EXCLUDE_TYPES, pageId },
   });
 
-  // Set WHERE clause if excluded block exists
-  if (!!excludeBlock) {
+  if (includedBlock) {
+    if (blockId) {
+      blockIdNum = Number.parseInt(blockId, 10);
+    } else {
+      const variant = await models.Variant.findOne({
+        where: { type: includedBlock.type },
+      });
+
+      newBlock = await models.Block.create({
+        type: includedBlock.type,
+        position: includedBlock.position,
+        settings: variant.settings,
+        styles: variant.styles,
+        content: variant.content,
+        pageId: includedBlock.pageId,
+      });
+
+      blockIdNum = newBlock.id;
+    }
+
     WHERE = {
       where: {
-        type: { [Op.ne]: EXCLUDE_TYPES },
+        [Op.or]: [
+          { type: { [Op.notIn]: EXCLUDE_TYPES } }, // массив обязателен
+          { id: blockIdNum }, // оставить конкретный блок
+        ],
       },
       required: false,
     };
   }
 
-  // Get page with filtered blocks
-  const page = await models.Page.findByPk(id, {
-    include: [
-      {
-        model: models.Block,
-        as: "blocks",
-        ...WHERE,
-      },
-    ],
+  page = await models.Page.findByPk(pageId, {
+    include: [{ model: models.Block, as: "blocks", ...WHERE }],
     order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
   });
 
-  if (!page) return null;
+  const pageToJson = page.toJSON();
 
-  // Handle specific block inclusion
-  if (blockId) {
-    includeBlock = await models.Block.findOne({
-      where: {
-        id: blockId,
-        pageId: id,
-        type: EXCLUDE_TYPES,
-      },
-    });
-  } else {
-    if (excludeBlock) {
-      const variant = await models.Variant.findOne({
-        where: {
-          type: excludeBlock.type,
-        },
-      });
-
-      includeBlock = await models.Block.create({
-        pageId: id,
-        type: variant.type,
-        content: variant.content,
-        styles: variant.styles,
-        settings: variant.settings,
-        position: excludeBlock.position,
-      });
-    }
+  if (newBlock) {
+    const blockToJSON = newBlock.toJSON();
+    pageToJson.blocks.push(blockToJSON);
   }
 
-  // Merge and sort blocks
-  const json = page.toJSON();
-  const nonAfishaBlocks = Array.isArray(json.blocks) ? json.blocks : [];
-  const merged = includeBlock
-    ? [...nonAfishaBlocks, includeBlock]
-    : nonAfishaBlocks;
-
-  merged.sort((a, b) => {
-    const pa = typeof a.position === "number" ? a.position : 0;
-    const pb = typeof b.position === "number" ? b.position : 0;
-    return pa - pb;
-  });
-
-  json.blocks = merged;
-  return json;
+  return pageToJson;
 }
 
 module.exports = { getPageWithFilteredBlocks };

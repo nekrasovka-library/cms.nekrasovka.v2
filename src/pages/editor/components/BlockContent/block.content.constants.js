@@ -63,6 +63,24 @@ export const BLOCK_CONTENT_TYPES = {
       label: "Заголовок",
     },
   },
+  author_name: {
+    element: Text,
+    params: {
+      label: "Имя автора",
+    },
+  },
+  author_text: {
+    element: Text,
+    params: {
+      label: "Об авторе",
+    },
+  },
+  author_picture_id: {
+    element: Text,
+    params: {
+      label: "ID изображения автора",
+    },
+  },
   date: {
     element: Calendar,
     params: {

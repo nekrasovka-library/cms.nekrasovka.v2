@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   BlankBlockActionButtons,
   BlankBlockAddButton,
@@ -19,6 +19,7 @@ import {
   setDecorationVisibility,
   setMenusVisibility,
 } from "../../../../features/visibility/visibilitySlice";
+import { useParams } from "react-router-dom";
 
 const Block = ({
   styles = {},
@@ -32,6 +33,7 @@ const Block = ({
   COMPONENT,
 }) => {
   const dispatch = useDispatch();
+  const params = useParams();
   const { isDecorationVisible, isContentVisible, isMenusVisible } = useSelector(
     ({ visibility }) => visibility,
   );
@@ -48,7 +50,7 @@ const Block = ({
     totalBlocks === 0;
 
   const handleDeleteBlock = () => {
-    dispatch(deleteBlockRequest({ id: blockId }));
+    dispatch(deleteBlockRequest({ id: blockId, blockId: params.blockId }));
   };
 
   const handleCopyBlock = () => {
@@ -60,6 +62,7 @@ const Block = ({
         content,
         type,
         position: position + 1,
+        ...(params.blockId && { blockId: params.blockId }),
       }),
     );
   };
@@ -95,7 +98,14 @@ const Block = ({
 
   const handleBlockMove = (direction) => {
     const actionType = direction === "up" ? position - 1 : position + 1;
-    dispatch(updateBlockRequest({ id: blockId, position: actionType }));
+
+    dispatch(
+      updateBlockRequest({
+        id: blockId,
+        position: actionType,
+        ...(params.blockId && { blockId: params.blockId }),
+      }),
+    );
   };
 
   const handleMouseOut = () => setIsBlankBlockFocused(false);

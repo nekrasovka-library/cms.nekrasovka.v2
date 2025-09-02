@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
 const { getPageWithFilteredBlocks } = require("../helpers");
-const { Op } = require("sequelize");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
 const PAGE_INCLUDE = {
@@ -25,91 +24,15 @@ async function detachChildrenFromDeleted(pageId) {
 // GET /api/pages/:id - получить страницу
 router.get("/:id/:blockId?", async (req, res) => {
   try {
+    let page;
     const id = Number.parseInt(req.params.id, 10);
-    const rawBlockId =
-      typeof req.params.blockId !== "undefined"
-        ? req.params.blockId
-        : req.query.blockId;
-    const blockId = Number.parseInt(rawBlockId, 10);
 
-    let WHERE = {};
-    let includeBlock = null;
-    const EXCLUDE_TYPES = ["afishaEvent"];
-
-    // Find excluded block
-    const excludeBlock = await models.Block.findOne({
-      where: {
-        pageId: id,
-        type: EXCLUDE_TYPES,
-      },
+    page = await getPageWithFilteredBlocks({
+      pageId: id,
+      blockId: req.params.blockId,
     });
 
-    // Set WHERE clause if excluded block exists
-    if (!!excludeBlock) {
-      WHERE = {
-        where: {
-          type: { [Op.ne]: EXCLUDE_TYPES },
-        },
-        required: false,
-      };
-    }
-
-    // Get page with filtered blocks
-    const page = await models.Page.findByPk(id, {
-      include: [
-        {
-          model: models.Block,
-          as: "blocks",
-          ...WHERE,
-        },
-      ],
-      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
-    });
-
-    // Handle specific block inclusion
-    if (!Number.isNaN(blockId)) {
-      includeBlock = await models.Block.findOne({
-        where: {
-          id: blockId,
-          pageId: id,
-          type: EXCLUDE_TYPES,
-        },
-      });
-    } else {
-      if (excludeBlock) {
-        const variant = await models.Variant.findOne({
-          where: {
-            type: excludeBlock.type,
-          },
-        });
-
-        includeBlock = await models.Block.create({
-          pageId: id,
-          type: variant.type,
-          content: variant.content,
-          styles: variant.styles,
-          settings: variant.settings,
-          position: excludeBlock.position,
-        });
-      }
-    }
-
-    // Merge and sort blocks
-    const json = page.toJSON();
-    const nonAfishaBlocks = Array.isArray(json.blocks) ? json.blocks : [];
-    const merged = includeBlock
-      ? [...nonAfishaBlocks, includeBlock]
-      : nonAfishaBlocks;
-
-    merged.sort((a, b) => {
-      const pa = typeof a.position === "number" ? a.position : 0;
-      const pb = typeof b.position === "number" ? b.position : 0;
-      return pa - pb;
-    });
-
-    json.blocks = merged;
-
-    return res.json(json);
+    return res.json(page);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to fetch page" });

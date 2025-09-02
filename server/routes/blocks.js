@@ -66,7 +66,9 @@ router.get("/", async (req, res) => {
 // POST /api/blocks - создать блок
 router.post("/", async (req, res) => {
   try {
-    const { pageId, type, settings, styles, content, position } = req.body;
+    let page;
+    const { blockId, pageId, type, settings, styles, content, position } =
+      req.body;
 
     const blocks = await models.Block.findAll({ where: { pageId } });
 
@@ -86,11 +88,10 @@ router.post("/", async (req, res) => {
       pageId,
     });
 
-    const page = await getPageWithFilteredBlocks(pageId, block.id);
-
-    if (!page) {
-      return res.status(404).json({ error: "Page not found" });
-    }
+    page = await getPageWithFilteredBlocks({
+      pageId: block.pageId,
+      blockId,
+    });
 
     res.status(201).json(page);
   } catch (e) {
@@ -103,7 +104,10 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const id = Number.parseInt(req.params.id, 10);
-    const { type, settings, styles, content, position } = req.body || {};
+    const { blockId, type, settings, styles, content, position } =
+      req.body || {};
+    let page;
+
     const block = await models.Block.findByPk(id);
     if (!block) return res.status(404).json({ error: "Block not found" });
 
@@ -140,11 +144,10 @@ router.put("/:id", async (req, res) => {
 
     await block.save();
 
-    const page = await getPageWithFilteredBlocks(block.pageId, id);
-
-    if (!page) {
-      return res.status(404).json({ error: "Page not found" });
-    }
+    page = await getPageWithFilteredBlocks({
+      pageId: block.pageId,
+      blockId,
+    });
 
     res.status(201).json(page);
   } catch (e) {
@@ -157,6 +160,9 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const id = Number.parseInt(req.params.id, 10);
+    const { blockId } = req.body || {};
+    let page;
+
     const block = await models.Block.findByPk(id);
     if (!block) return res.status(404).json({ error: "Block not found" });
 
@@ -173,11 +179,10 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
-    const page = await getPageWithFilteredBlocks(block.pageId);
-
-    if (!page) {
-      return res.status(404).json({ error: "Page not found" });
-    }
+    page = await getPageWithFilteredBlocks({
+      pageId: block.pageId,
+      blockId,
+    });
 
     res.status(201).json(page);
   } catch (e) {

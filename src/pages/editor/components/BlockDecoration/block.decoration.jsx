@@ -20,15 +20,24 @@ import {
   updateBlockRequest,
 } from "../../../../features/block/blockSlice";
 import { setDecorationVisibility } from "../../../../features/visibility/visibilitySlice";
+import { useLocation } from "react-router-dom";
 
 const BlockDecoration = () => {
   const dispatch = useDispatch();
   const block = useSelector(({ block }) => block);
   const { isDecorationVisible } = useSelector(({ visibility }) => visibility);
   const [blockStyles, setBlockStyles] = useState(null);
+  const location = useLocation();
 
   const saveStyles = () => {
-    dispatch(updateBlockRequest({ id: block.items.id, styles: blockStyles }));
+    const params = location.pathname.split("/");
+    dispatch(
+      updateBlockRequest({
+        id: block.items.id,
+        styles: blockStyles,
+        ...(params[4] && { blockId: params[4] }),
+      }),
+    );
   };
 
   const saveAndExitStyles = () => {

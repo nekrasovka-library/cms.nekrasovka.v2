@@ -12,6 +12,7 @@ export function apiFetchBlock({ payload }) {
 }
 
 export function apiCreateBlock({ payload }) {
+  console.log("❗", payload);
   const url = `${baseApiUrl}/api/blocks`;
   return fetch(url, {
     method: "POST",
@@ -27,7 +28,7 @@ export function apiCreateBlock({ payload }) {
 }
 
 export function apiDeleteBlock({ payload }) {
-  const url = `${baseApiUrl}/api/blocks/${payload.id}}`;
+  const url = `${baseApiUrl}/api/blocks/${payload.id}`;
   return fetch(url, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -42,7 +43,7 @@ export function apiDeleteBlock({ payload }) {
 }
 
 export function apiUpdateBlock({ payload }) {
-  const url = `${baseApiUrl}/api/blocks/${payload.id}}`;
+  const url = `${baseApiUrl}/api/blocks/${payload.id}`;
   return fetch(url, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

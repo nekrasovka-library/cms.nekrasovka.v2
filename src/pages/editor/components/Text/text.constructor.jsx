@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import Editor from "../Editor/editor";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
+import { useParams } from "react-router-dom";
 
 const TextConstructor = ({
   text,
@@ -12,9 +13,16 @@ const TextConstructor = ({
   maxWidth,
 }) => {
   const dispatch = useDispatch();
+  const params = useParams();
 
   const updateText = (newText) => {
-    dispatch(updateBlockRequest({ id: blockId, content: { text: newText } }));
+    dispatch(
+      updateBlockRequest({
+        id: blockId,
+        content: { text: newText },
+        ...(params.blockId && { blockId: params.blockId }),
+      }),
+    );
   };
 
   return (

@@ -20,6 +20,7 @@ import {
   resetBlock,
 } from "../../../../features/block/blockSlice";
 import { setMenusVisibility } from "../../../../features/visibility/visibilitySlice";
+import { useLocation } from "react-router-dom";
 
 const ConstructorMenus = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const ConstructorMenus = () => {
   const menus = useSelector(({ menus }) => menus);
   const page = useSelector(({ page }) => page);
   const block = useSelector(({ block }) => block);
+  const location = useLocation();
 
   const handleClose = () => {
     dispatch(setMenusVisibility());
@@ -39,12 +41,14 @@ const ConstructorMenus = () => {
   };
 
   const handleVariant = (id) => {
+    const params = location.pathname.split("/");
     const variant = menus.variants.find((item) => item.id === id);
     dispatch(
       createBlockRequest({
-        pageId: page.items.id,
         ...variant,
+        pageId: page.items.id,
         position: block.items.position + 1,
+        ...(params[4] && { blockId: params[4] }),
       }),
     );
 

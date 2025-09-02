@@ -6,6 +6,7 @@ import {
   DateTimeStyled,
   EventCanceled,
   EventImageMobileStyled,
+  EventTextStyled,
   EventTitleStyled,
   LeftSectionStyled,
   LocationTextStyled,
@@ -31,11 +32,13 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   const time = formatTime(today);
   const params = useParams();
   const navigate = useNavigate();
+
   const updateText = (newText) => {
     dispatch(
       updateBlockRequest({
         id: blockId,
         content: { text: newText },
+        ...(params.blockId && { blockId: params.blockId }),
       }),
     );
   };
@@ -76,11 +79,9 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
         <TextStyled>
           <EventTitleStyled>{event.title}</EventTitleStyled>
         </TextStyled>
-        {/*<TextStyled>*/}
-        {/*  <EventTextStyled>*/}
-        {/*    {event.author?.name || "Имя Автора"}*/}
-        {/*  </EventTextStyled>*/}
-        {/*</TextStyled>*/}
+        <TextStyled>
+          <EventTextStyled>{event.author_name}</EventTextStyled>
+        </TextStyled>
         <TextStyled>
           <Editor
             text={event.text}
@@ -90,26 +91,12 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
             updateText={updateText}
           />
         </TextStyled>
-        {/*<AuthorStyled>*/}
-        {/*  <ImageConstructor*/}
-        {/*    blockId={blockId}*/}
-        {/*    text={event.author?.image}*/}
-        {/*    borderRadius="50"*/}
-        {/*    updateImage={(newImage) =>*/}
-        {/*      setEvent({*/}
-        {/*        ...event,*/}
-        {/*        author: { ...event.author, image: newImage },*/}
-        {/*      })*/}
-        {/*    }*/}
-        {/*  />*/}
-        {/*  <Editor*/}
-        {/*    text={"<div>Об авторе</div>"}*/}
-        {/*    type="author"*/}
-        {/*    backgroundColor={"#ffff"}*/}
-        {/*    blockId={blockId}*/}
-        {/*    updateText={updateAuthor}*/}
-        {/*  />*/}
-        {/*</AuthorStyled>*/}
+        <AuthorStyled>
+          <ImagePreview text={event.author_picture_id} borderRadius="5" />
+          <div>
+            {event.author_name}, {event.author_text}
+          </div>
+        </AuthorStyled>
       </LeftSectionStyled>
       <RightSectionStyled $isEventCancelled={!!event.canceled}>
         <ImagePreview text={event.picture_id} borderRadius="5" />

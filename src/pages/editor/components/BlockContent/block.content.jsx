@@ -13,6 +13,7 @@ import {
 import { setContentVisibility } from "../../../../features/visibility/visibilitySlice";
 import { BLOCK_CONTENT_TYPES } from "./block.content.constants";
 import Select from "./components/content.select";
+import { useLocation } from "react-router-dom";
 
 const BlockContent = () => {
   const dispatch = useDispatch();
@@ -20,9 +21,18 @@ const BlockContent = () => {
   const project = useSelector(({ project }) => project);
   const [blockContent, setBlockContent] = useState(null);
   const { isContentVisible } = useSelector(({ visibility }) => visibility);
+  const location = useLocation();
 
   const saveContent = () => {
-    dispatch(updateBlockRequest({ id: block.items.id, ...blockContent }));
+    const params = location.pathname.split("/");
+
+    dispatch(
+      updateBlockRequest({
+        id: block.items.id,
+        ...blockContent,
+        ...(params[4] && { blockId: params[4] }),
+      }),
+    );
   };
 
   const saveAndExitContent = () => {

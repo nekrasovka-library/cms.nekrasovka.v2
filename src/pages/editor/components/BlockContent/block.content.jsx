@@ -93,8 +93,7 @@ const BlockContent = () => {
   };
 
   const renderSettings = (type) => {
-    const BLOCK_SETTINGS_TYPES = getBlockSettingsTypes(project);
-    const settingsType = BLOCK_SETTINGS_TYPES[type];
+    const settingsType = getBlockSettingsTypes(project, type);
 
     if (settingsType === undefined) return;
     const SettingsComponent = settingsType.element;

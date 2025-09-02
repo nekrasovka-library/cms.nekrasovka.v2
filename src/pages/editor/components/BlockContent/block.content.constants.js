@@ -3,33 +3,37 @@ import Text from "./components/content.text";
 import Calendar from "./components/content.calendar";
 import Switch from "./components/content.switch";
 
-export const getBlockSettingsTypes = (project) => ({
-  child_page_id: {
-    element: Select,
-    params: {
-      label: "Страница контента",
-      options: [
-        { value: "", label: "Страница не указана" },
-        ...(project?.items?.pages ?? []).map((p) => ({
-          value: p.id,
-          label: p.name,
-        })),
-      ],
+export const getBlockSettingsTypes = (props, type) => {
+  const BLOCK_SETTINGS_TYPES = {
+    child_page_id: {
+      element: Select,
+      params: {
+        label: "Страница контента",
+        options: [
+          { value: "", label: "Страница не указана" },
+          ...(props.project?.items?.pages ?? []).map((p) => ({
+            value: p.id,
+            label: p.name,
+          })),
+        ],
+      },
     },
-  },
-  canceled: {
-    element: Switch,
-    params: {
-      label: "Отменено",
+    canceled: {
+      element: Switch,
+      params: {
+        label: "Отменено",
+      },
     },
-  },
-  is_public: {
-    element: Switch,
-    params: {
-      label: "Опубликовано",
+    is_public: {
+      element: Switch,
+      params: {
+        label: "Опубликовано",
+      },
     },
-  },
-});
+  };
+
+  return BLOCK_SETTINGS_TYPES[type];
+};
 
 export const BLOCK_CONTENT_TYPES = {
   geo: {

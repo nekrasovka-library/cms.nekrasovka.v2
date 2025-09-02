@@ -11,6 +11,7 @@ import ConstructorMenus from "./pages/editor/components/ConstructorMenus/constru
 import BlockDecoration from "./pages/editor/components/BlockDecoration/block.decoration";
 import BlockContent from "./pages/editor/components/BlockContent/block.content";
 import PageSettings from "./pages/editor/components/PageSettings/page.settings";
+import RouteParamsSync from "./route/RouteParamsSync";
 
 function App() {
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <>
+      <RouteParamsSync />
       {isPreviewVisible ? (
         <>
           <ConstructorButton />

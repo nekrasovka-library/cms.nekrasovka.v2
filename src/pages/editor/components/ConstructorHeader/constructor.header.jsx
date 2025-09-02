@@ -10,18 +10,18 @@ import {
 } from "./constructor.header.styles.js";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "../../../../nekrasovka-ui/Icon/icon";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ConstructorHeaderDropdown from "./components/constructor.header.dropdown.jsx";
 import { fetchProjectRequest } from "../../../../features/project/projectSlice";
 import { setPreviewVisibility } from "../../../../features/visibility/visibilitySlice";
 
 const ConstructorHeader = () => {
-  const location = useLocation();
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const page = useSelector(({ page }) => page);
   const project = useSelector(({ project }) => project);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
+  const route = useSelector(({ route }) => route);
 
   const handleToggleView = () => {
     dispatch(setPreviewVisibility());
@@ -32,15 +32,13 @@ const ConstructorHeader = () => {
   };
 
   useEffect(() => {
-    const params = location.pathname.split("/");
-
-    if (params[2] && params[3]) {
+    if (route.params.projectId && route.params.pageId) {
       if (project.status !== "succeeded") {
-        dispatch(fetchProjectRequest({ id: params[2] }));
+        dispatch(fetchProjectRequest({ id: route.params.projectId }));
       }
       setIsProjectOpen(true);
     } else setIsProjectOpen(false);
-  }, [dispatch, location, project]);
+  }, [dispatch, route, project]);
 
   return (
     <HeaderContainer>

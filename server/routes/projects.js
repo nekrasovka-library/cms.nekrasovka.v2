@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
   try {
     const project = await models.Project.findByPk(req.params.id, {
       include: [{ model: models.Page, as: "pages" }],
-      order: [[{ model: models.Page, as: "pages" }, "createdAt", "DESC"]],
+      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
     if (!project) return res.status(404).json({ error: "Project not found" });
     res.json(project);
@@ -65,7 +65,7 @@ router.put("/:id", async (req, res) => {
     const { name, settings, url, styles, routes } = req.body || {};
     const project = await models.Project.findByPk(req.params.id, {
       include: [{ model: models.Page, as: "pages" }],
-      order: [[{ model: models.Page, as: "pages" }, "createdAt", "DESC"]],
+      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
 
     if (!project) return res.status(404).json({ error: "Project not found" });
@@ -169,6 +169,7 @@ router.get("/:id/pages", async (req, res) => {
   try {
     const pages = await models.Page.findAll({
       where: { projectId: req.params.id },
+      order: [["id", "ASC"]],
     });
     res.json(pages);
   } catch (e) {

@@ -15,16 +15,14 @@ import {
   BLOCK_CONTENT_TYPES,
   getBlockSettingsTypes,
 } from "./block.content.constants";
-import Select from "./components/content.select";
-import Switch from "./components/content.switch";
 
 const BlockContent = () => {
   const dispatch = useDispatch();
   const block = useSelector(({ block }) => block);
   const project = useSelector(({ project }) => project);
+  const route = useSelector(({ route }) => route);
   const [blockContent, setBlockContent] = useState(null);
   const { isContentVisible } = useSelector(({ visibility }) => visibility);
-  const route = useSelector(({ route }) => route);
 
   const saveContent = () => {
     dispatch(
@@ -125,9 +123,7 @@ const BlockContent = () => {
             .map(([key, value]) => ({
               [key]: value,
             }))
-            .map((item) => {
-              return renderContent(Object.keys(item)[0]);
-            })}
+            .map((item) => renderContent(Object.keys(item)[0]))}
         </SettingsContentChanges>
       )}
       <SettingsTitleLabel>Настройки контента</SettingsTitleLabel>
@@ -137,9 +133,7 @@ const BlockContent = () => {
             .map(([key, value]) => ({
               [key]: value,
             }))
-            .map((item) => {
-              return renderSettings(Object.keys(item)[0]);
-            })}
+            .map((item) => renderSettings(Object.keys(item)[0]))}
         </SettingsContentChanges>
       )}
     </Container1>

@@ -3,9 +3,9 @@ const { Op } = require("sequelize");
 
 async function getPageWithFilteredBlocks({ pageId, blockId }) {
   const EXCLUDE_TYPES = ["afishaEvent"];
+  let WHERE = {};
   let newBlock;
   let page;
-  let WHERE = {};
   let blockIdNum;
 
   const includedBlock = await models.Block.findOne({
@@ -48,14 +48,13 @@ async function getPageWithFilteredBlocks({ pageId, blockId }) {
     order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
   });
 
-  const pageToJson = page.toJSON();
-
   if (newBlock) {
+    const pageToJson = page.toJSON();
     const blockToJSON = newBlock.toJSON();
     pageToJson.blocks.push(blockToJSON);
-  }
 
-  return pageToJson;
+    return pageToJson;
+  } else return page;
 }
 
 module.exports = { getPageWithFilteredBlocks };

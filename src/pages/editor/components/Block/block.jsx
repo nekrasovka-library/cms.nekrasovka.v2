@@ -153,10 +153,6 @@ const Block = ({
             <Icon icon="copy" type="button" onClick={handleCopyBlock} />
           </Tooltip>
 
-          <Tooltip text="Создать блок">
-            <Icon icon="save" type="button" onClick={handleCopyBlock} />
-          </Tooltip>
-
           <Tooltip text="Удалить блок">
             <Icon icon="trash" type="button" onClick={handleDeleteBlock} />
           </Tooltip>

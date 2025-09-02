@@ -1,12 +1,14 @@
 import React from "react";
 import {
-  AuthorStyled,
+  AuthorCardStyled,
+  AuthorNameStyled,
   ButtonsCalendarContainerMobileStyled,
   DateTextStyled,
   DateTimeStyled,
   EventCanceled,
   EventImageMobileStyled,
   EventTextStyled,
+  EventTitleStyled,
   LeftSectionStyled,
   LocationTextStyled,
   RestrictionStyled,
@@ -56,17 +58,13 @@ const AfishaEventPreview = ({ event, loading }) => {
           <ImagePreview text={event.picture_id} borderRadius="5" />
         </EventImageMobileStyled>
         <TextStyled>
-          <EventTextStyled
-            $loading={loading}
-            dangerouslySetInnerHTML={{ __html: event.title }}
-          />
+          <EventTitleStyled $loading={loading}>{event.title}</EventTitleStyled>
         </TextStyled>
         {event.author && (
           <TextStyled>
-            <EventTextStyled
-              $loading={loading}
-              dangerouslySetInnerHTML={{ __html: event.author.name }}
-            />
+            <AuthorNameStyled $loading={loading}>
+              {event.author_name}
+            </AuthorNameStyled>
           </TextStyled>
         )}
         <TextStyled>
@@ -76,10 +74,13 @@ const AfishaEventPreview = ({ event, loading }) => {
           />
         </TextStyled>
         {event.author && (
-          <AuthorStyled>
+          <AuthorCardStyled $loading={loading}>
             <ImagePreview text={event.author.image} borderRadius="50" />
-            <div dangerouslySetInnerHTML={{ __html: event.author.text }} />
-          </AuthorStyled>
+            <div>
+              <span>{event.author_name},</span>{" "}
+              <span> {event.author_text}</span>
+            </div>
+          </AuthorCardStyled>
         )}
       </LeftSectionStyled>
       <RightSectionStyled $isEventCancelled={event.canceled}>

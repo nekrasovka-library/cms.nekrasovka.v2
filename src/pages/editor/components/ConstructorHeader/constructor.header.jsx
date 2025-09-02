@@ -76,16 +76,16 @@ const ConstructorHeader = () => {
           </>
         )}
       </HeaderLeft>
-      {isProjectOpen && (
-        <HeaderRight>
-          <HeaderRightPreview onClick={handleToggleView}>
-            Предпросмотр
-          </HeaderRightPreview>
-          <HeaderRightPreview onClick={handleSaveProjectPage}>
-            Сохранить страницу
-          </HeaderRightPreview>
-        </HeaderRight>
-      )}
+      {/*{isProjectOpen && (*/}
+      {/*  <HeaderRight>*/}
+      {/*    <HeaderRightPreview onClick={handleToggleView}>*/}
+      {/*      Предпросмотр*/}
+      {/*    </HeaderRightPreview>*/}
+      {/*    <HeaderRightPreview onClick={handleSaveProjectPage}>*/}
+      {/*      Сохранить страницу*/}
+      {/*    </HeaderRightPreview>*/}
+      {/*  </HeaderRight>*/}
+      {/*)}*/}
     </HeaderContainer>
   );
 };

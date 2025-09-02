@@ -3,24 +3,33 @@ import Text from "./components/content.text";
 import Calendar from "./components/content.calendar";
 import Switch from "./components/content.switch";
 
-export const BLOCK_SETTINGS_TYPES = {
+export const getBlockSettingsTypes = (project) => ({
   child_page_id: {
     element: Select,
     params: {
       label: "Страница контента",
       options: [
-        {
-          value: "Конференц-зал / 5 этаж",
-          label: "Конференц-зал / 5 этаж",
-        },
-        {
-          value: "Арт-пространство / 2 этаж",
-          label: "Арт-пространство / 2 этаж",
-        },
+        { value: "", label: "Страница не указана" },
+        ...(project?.items?.pages ?? []).map((p) => ({
+          value: p.id,
+          label: p.name,
+        })),
       ],
     },
   },
-};
+  canceled: {
+    element: Switch,
+    params: {
+      label: "Отменено",
+    },
+  },
+  is_public: {
+    element: Switch,
+    params: {
+      label: "Опубликовано",
+    },
+  },
+});
 
 export const BLOCK_CONTENT_TYPES = {
   geo: {
@@ -85,18 +94,6 @@ export const BLOCK_CONTENT_TYPES = {
     element: Calendar,
     params: {
       label: "Дата и время мероприятия",
-    },
-  },
-  canceled: {
-    element: Switch,
-    params: {
-      label: "Отменено",
-    },
-  },
-  is_public: {
-    element: Switch,
-    params: {
-      label: "Опубликовано",
     },
   },
 };

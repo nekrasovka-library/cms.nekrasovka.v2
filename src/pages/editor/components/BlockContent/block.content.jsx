@@ -11,8 +11,12 @@ import {
   updateBlockRequest,
 } from "../../../../features/block/blockSlice";
 import { setContentVisibility } from "../../../../features/visibility/visibilitySlice";
-import { BLOCK_CONTENT_TYPES } from "./block.content.constants";
+import {
+  BLOCK_CONTENT_TYPES,
+  getBlockSettingsTypes,
+} from "./block.content.constants";
 import Select from "./components/content.select";
+import Switch from "./components/content.switch";
 
 const BlockContent = () => {
   const dispatch = useDispatch();
@@ -88,23 +92,8 @@ const BlockContent = () => {
     );
   };
 
-  const BLOCK_SETTINGS_TYPES = {
-    child_page_id: {
-      element: Select,
-      params: {
-        label: "Страница контента",
-        options: [
-          { value: "", label: "Страница не указана" },
-          ...(project?.items?.pages ?? []).map((p) => ({
-            value: p.id,
-            label: p.name,
-          })),
-        ],
-      },
-    },
-  };
-
   const renderSettings = (type) => {
+    const BLOCK_SETTINGS_TYPES = getBlockSettingsTypes(project);
     const settingsType = BLOCK_SETTINGS_TYPES[type];
 
     if (settingsType === undefined) return;

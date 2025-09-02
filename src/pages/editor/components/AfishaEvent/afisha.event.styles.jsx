@@ -160,6 +160,27 @@ const EventTitleStyled = styled.span`
   ${SKELETON_PULSE_ANIMATION};
 `;
 
+const EventTextStyled = styled.span`
+  ${DESKTOP_TABLET_MEDIA} {
+    p,
+    span {
+      font-size: 20px !important;
+      line-height: 26px !important;
+    }
+  }
+
+  ${MOBILE_MEDIA} {
+    p,
+    span {
+      font-size: 14px !important;
+      line-height: 15px !important;
+    }
+  }
+
+  ${({ $loading }) => $loading && SKELETON_BASE_STYLES};
+  ${SKELETON_PULSE_ANIMATION};
+`;
+
 const TextStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -374,13 +395,34 @@ const EventCanceled = styled.div`
   }
 `;
 
-const AuthorStyled = styled.div`
+const AuthorNameStyled = styled.span`
+  ${DESKTOP_TABLET_MEDIA} {
+    font-size: 24px;
+  }
+
+  ${MOBILE_MEDIA} {
+    font-size: 16px;
+  }
+
+  ${({ $loading }) => $loading && SKELETON_BASE_STYLES};
+  ${SKELETON_PULSE_ANIMATION};
+`;
+
+const AuthorCardStyled = styled.div`
   display: flex;
   align-items: center;
   background: #ffffff;
   border-radius: 5px;
   padding: 20px;
   margin-top: 25px;
+
+  div {
+    &:nth-child(2) {
+      span:nth-child(1) {
+        font-weight: 500;
+      }
+    }
+  }
 
   ${DESKTOP_TABLET_MEDIA} {
     column-gap: 20px;
@@ -394,9 +436,7 @@ const AuthorStyled = styled.div`
       }
 
       &:nth-child(2) {
-        span:nth-child(1) {
-          font-weight: 500;
-        }
+        font-size: 18px;
       }
     }
   }
@@ -404,29 +444,22 @@ const AuthorStyled = styled.div`
   ${MOBILE_MEDIA} {
     column-gap: 10px;
 
-    div:nth-child(1) {
-      img {
-        width: 40px;
-        height: 40px;
+    div {
+      &:nth-child(1) {
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      &:nth-child(2) {
+        font-size: 12px;
       }
     }
   }
-`;
 
-const EventTextStyled = styled.div`
-  a {
-    color: inherit;
-  }
-
-  ${({ $loading }) =>
-    $loading &&
-    `
-    > div > * {
-      ${SKELETON_BASE_STYLES}
-    }
-  `};
-
-  ${SKELETON_PULSE_ANIMATION}
+  ${({ $loading }) => $loading && SKELETON_BASE_STYLES};
+  ${SKELETON_PULSE_ANIMATION};
 `;
 
 export {
@@ -442,7 +475,8 @@ export {
   LeftSectionStyled,
   EventTextStyled,
   EventPageContainerStyled,
-  AuthorStyled,
+  AuthorCardStyled,
+  AuthorNameStyled,
   RightSectionButtonCalendarStyled,
   RightSectionButtonRegistrationStyled,
   ButtonsCalendarContainerMobileStyled,

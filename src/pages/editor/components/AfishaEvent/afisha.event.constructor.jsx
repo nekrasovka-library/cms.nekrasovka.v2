@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import {
-  AuthorStyled,
+  AuthorCardStyled,
+  AuthorNameStyled,
   ButtonsCalendarContainerMobileStyled,
   DateTextStyled,
   DateTimeStyled,
@@ -80,23 +81,25 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
           <EventTitleStyled>{event.title}</EventTitleStyled>
         </TextStyled>
         <TextStyled>
-          <EventTextStyled>{event.author_name}</EventTextStyled>
+          <AuthorNameStyled>{event.author_name}</AuthorNameStyled>
         </TextStyled>
         <TextStyled>
-          <Editor
-            text={event.text}
-            type="text"
-            backgroundColor={backgroundColor}
-            blockId={blockId}
-            updateText={updateText}
-          />
+          <EventTextStyled>
+            <Editor
+              text={event.text}
+              type="text"
+              backgroundColor={backgroundColor}
+              blockId={blockId}
+              updateText={updateText}
+            />
+          </EventTextStyled>
         </TextStyled>
-        <AuthorStyled>
+        <AuthorCardStyled>
           <ImagePreview text={event.author_picture_id} borderRadius="50" />
           <div>
             <span>{event.author_name},</span> <span> {event.author_text}</span>
           </div>
-        </AuthorStyled>
+        </AuthorCardStyled>
       </LeftSectionStyled>
       <RightSectionStyled $isEventCancelled={!!event.canceled}>
         <ImagePreview text={event.picture_id} borderRadius="5" />

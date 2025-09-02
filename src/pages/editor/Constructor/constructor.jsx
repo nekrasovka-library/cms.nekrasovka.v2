@@ -13,6 +13,8 @@ import AfishaMain from "../components/AfishaMain/afisha.main";
 import AfishaPage from "../components/AfishaPage/afisha.page";
 import Text from "../components/Text/text";
 import AfishaEvent from "../components/AfishaEvent/afisha.event";
+import { AnimatePresence } from "framer-motion";
+import Transition from "../components/Transition/transition";
 
 const Constructor = () => {
   const dispatch = useDispatch();
@@ -43,30 +45,32 @@ const Constructor = () => {
   };
 
   return (
-    <>
-      {page.items.blocks?.length > 0 ? (
-        page.items.blocks.map(
-          ({ id, pageId, content, type, styles, position, settings }) => {
-            return (
-              <Block
-                key={id}
-                blockId={id}
-                pageId={pageId}
-                type={type}
-                content={content}
-                styles={styles}
-                position={position}
-                settings={settings}
-                totalBlocks={page.items.blocks.length}
-                COMPONENT={CONSTRUCTOR_COMPONENTS[type]}
-              />
-            );
-          },
-        )
-      ) : (
-        <Block pageId={pageId} />
-      )}
-    </>
+    <AnimatePresence mode="wait">
+      <Transition key={page.status === "succeeded"}>
+        {page.items.blocks?.length > 0 ? (
+          page.items.blocks.map(
+            ({ id, pageId, content, type, styles, position, settings }) => {
+              return (
+                <Block
+                  key={id}
+                  blockId={id}
+                  pageId={pageId}
+                  type={type}
+                  content={content}
+                  styles={styles}
+                  position={position}
+                  settings={settings}
+                  totalBlocks={page.items.blocks.length}
+                  COMPONENT={CONSTRUCTOR_COMPONENTS[type]}
+                />
+              );
+            },
+          )
+        ) : (
+          <Block pageId={pageId} />
+        )}
+      </Transition>
+    </AnimatePresence>
   );
 };
 

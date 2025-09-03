@@ -88,6 +88,33 @@ const ERROR_OVERLAY_STYLES = `
   }
 `;
 
+const PageTitleStyled = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  column-gap: 10px;
+
+  span {
+    &:nth-child(1) {
+      font-weight: 500;
+    }
+  }
+
+  ${DESKTOP_TABLET_MEDIA} {
+    margin: 0 auto 25px;
+    span {
+      font-size: 18px;
+    }
+  }
+
+  ${MOBILE_MEDIA} {
+    margin-bottom: 15px;
+    span {
+      font-size: 12px;
+    }
+  }
+`;
+
 const DateTextStyled = styled.span`
   font-weight: ${AFISHA_THEME.fontWeightMedium};
   margin-right: 5px;
@@ -483,4 +510,5 @@ export {
   EventCanceled,
   EventImageMobileStyled,
   RestrictionStyled,
+  PageTitleStyled,
 };

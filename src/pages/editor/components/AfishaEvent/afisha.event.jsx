@@ -2,6 +2,7 @@ import React from "react";
 import {
   EventPageContainerStyled,
   EventPageStyled,
+  PageTitleStyled,
 } from "./afisha.event.styles";
 import AfishaEventPreview from "./afisha.event.preview";
 import AfishaEventConstructor from "./afisha.event.constructor";
@@ -25,6 +26,10 @@ const AfishaEvent = ({
       $paddingTop={paddingTop}
       $paddingBottom={paddingBottom}
     >
+      <PageTitleStyled>
+        <span>События</span>
+        <span>Афиша</span>
+      </PageTitleStyled>
       <EventPageContainerStyled $maxWidth={maxWidth}>
         {isPreviewVisible ? (
           <AfishaEventPreview event={content} />

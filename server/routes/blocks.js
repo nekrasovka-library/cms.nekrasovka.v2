@@ -129,14 +129,18 @@ router.put("/:id", async (req, res) => {
       });
 
       for (const blockKey of blocks) {
-        if (position < block.position && blockKey.position === position) {
-          blockKey.position += 1;
-          await blockKey.save();
+        if (blockKey.type === block.type) {
+          blockKey.position = position;
+        } else {
+          if (position < block.position && blockKey.position === position) {
+            blockKey.position += 1;
+          }
+          if (position > block.position && blockKey.position === position) {
+            blockKey.position -= 1;
+          }
         }
-        if (position > block.position && blockKey.position === position) {
-          blockKey.position -= 1;
-          await blockKey.save();
-        }
+
+        await blockKey.save();
       }
 
       block.position = position;

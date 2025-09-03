@@ -48,13 +48,7 @@ async function getPageWithFilteredBlocks({ pageId, blockId }) {
     order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
   });
 
-  if (newBlock) {
-    const pageToJson = page.toJSON();
-    const blockToJSON = newBlock.toJSON();
-    pageToJson.blocks.push(blockToJSON);
-
-    return pageToJson;
-  } else return page;
+  return page;
 }
 
 module.exports = { getPageWithFilteredBlocks };

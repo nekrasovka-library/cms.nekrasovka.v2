@@ -29,7 +29,7 @@ const Constructor = () => {
     return () => {
       dispatch(resetPage());
     };
-  }, [pageId, blockId, dispatch]);
+  }, [pageId]);
 
   const CONSTRUCTOR_COMPONENTS = {
     text: Text,

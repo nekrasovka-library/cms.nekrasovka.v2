@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { TOOLBAR_OPTIONS } from "./editor.constants";
 import { EditorComponent, EditorContainer } from "./editor.styles";
 import SunEditor from "suneditor-react";
-import { ru } from "suneditor/src/lang";
 import "suneditor/dist/css/suneditor.min.css";
 import { resetBlock, setBlock } from "../../../../features/block/blockSlice";
 
@@ -107,7 +106,7 @@ const Editor = ({
             $backgroundColor={backgroundColor}
           >
             <SunEditor
-              lang={ru}
+              lang="ru"
               setContents={item}
               onClick={() => handleEditorFocused(index)}
               onChange={handleContentChange}

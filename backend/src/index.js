@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { sequelize, models } = require("./models");
-const { events } = require("./data/events");
+const { resolve, join } = require("node:path");
+const CONFIG = require("./config.js");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,35 +19,19 @@ app.use("/api/menus", require("./routes/menus"));
 app.use("/api/templates", require("./routes/templates"));
 app.use("/api/events", require("./routes/events"));
 
-// function createMenus() {
-//   menus.data.forEach(async (menu) => {
-//     const { id } = await models.Menu.create({ name: menu.name });
-//     for (const variant of menu.variants) {
-//       await models.Variant.create({
-//         menuId: id,
-//         image: variant.image,
-//         type: variant.type,
-//         content: !!variant.text ? { text: variant.text } : {},
-//         styles: variant.styles,
-//       });
-//     }
-//
-//     console.log("❗", id, menu);
-//   });
-// }
+// Раздача статики фронтенда в продакшене
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(CONFIG.PATHS.BUILD_DIR));
 
-// function createEvents() {
-//   events.forEach(async (event) => {
-//     const { id } = await models.Event.create({ ...event });
-//
-//     console.log("❗", id, event);
-//   });
-// }
+  // SPA fallback: все не-API маршруты отдаем на index.html
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
+    res.sendFile(CONFIG.PATHS.INDEX_HTML);
+  });
+}
 
 // Start server after DB is ready
 async function start() {
-  // createMenus();
-  // createEvents();
   try {
     await sequelize.sync(); // For dev convenience; replace with migrations in prod
     app.listen(PORT, () => {

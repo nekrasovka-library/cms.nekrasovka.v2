@@ -11,7 +11,7 @@ export const getBlockSettingsTypes = (props, type) => {
         label: "Страница контента",
         options: [
           { value: "", label: "Страница не указана" },
-          ...(props.project?.items?.pages ?? []).map((p) => ({
+          ...(props.items?.pages ?? []).map((p) => ({
             value: p.id,
             label: p.name,
           })),

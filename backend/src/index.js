@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const { sequelize, models } = require("./models");
-const { resolve, join } = require("node:path");
 const CONFIG = require("./config.js");
 
 const app = express();

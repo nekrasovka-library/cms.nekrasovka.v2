@@ -1,1 +1,3 @@
-export const EXCLUDE_TYPES = ["afishaEvent"];
+const EXCLUDE_TYPES = ["afishaEvent"];
+
+module.exports = { EXCLUDE_TYPES };

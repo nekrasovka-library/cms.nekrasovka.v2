@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  items: [],
+  items: [
+    {
+      id: 1,
+      name: "Roboto",
+    },
+  ],
   status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null,
 };

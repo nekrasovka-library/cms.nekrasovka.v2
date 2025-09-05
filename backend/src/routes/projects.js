@@ -70,7 +70,9 @@ router.put("/:id", async (req, res) => {
 
     if (!project) return res.status(404).json({ error: "Project not found" });
 
-    if (typeof styles !== "undefined") project.styles = styles;
+    if (typeof styles !== "undefined") {
+      project.styles = { ...project.styles, ...styles };
+    }
     if (typeof routes !== "undefined") project.routes = routes;
     if (typeof url !== "undefined") project.url = url;
     if (typeof name !== "undefined") project.name = name;

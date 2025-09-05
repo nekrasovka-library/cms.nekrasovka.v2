@@ -47,7 +47,24 @@ const Editor = ({
     setBlockFocused(index);
   };
 
-  const handleEditorBlur = () => {
+  // Проверка: ушёл ли фокус на элемент внутри UI SunEditor (toolbar, списки и т.д.)
+  const isInsideEditorUI = (target, core) => {
+    if (!target || !core) return false;
+    if (typeof target.closest === "function") {
+      const uiRoot = target.closest(
+        ".sun-editor, .se-dialog, .se-controller, .se-tooltip, .se-list-layer, .se-form-group, .se-color, .se-menu, .se-menu-list, .se-resizing, .se-layer, .se-wrapper",
+      );
+      if (uiRoot) return true;
+    }
+  };
+
+  const handleEditorBlur = (event, core) => {
+    // Игнорируем blur, если клик был по элементу внутри самого SunEditor (toolbar и проч.)
+    const nextTarget = event?.relatedTarget || document.activeElement;
+    if (isInsideEditorUI(nextTarget, core)) {
+      return;
+    }
+
     dispatch(resetBlock());
     setBlockFocused(null);
   };

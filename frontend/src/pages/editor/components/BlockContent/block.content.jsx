@@ -86,7 +86,11 @@ const BlockContent = () => {
     };
 
     return (
-      <ContentComponent {...params} handleContentChange={handleContentChange} />
+      <ContentComponent
+        key={type}
+        {...params}
+        handleContentChange={handleContentChange}
+      />
     );
   };
 
@@ -104,6 +108,7 @@ const BlockContent = () => {
 
     return (
       <SettingsComponent
+        key={type}
         {...params}
         handleContentChange={handleSettingsChange}
       />

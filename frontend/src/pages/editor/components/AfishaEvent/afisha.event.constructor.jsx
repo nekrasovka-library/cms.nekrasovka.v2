@@ -47,6 +47,10 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   useEffect(() => {
     if (!params.blockId && blockId) {
       navigate(`./${blockId}`, { replace: true });
+    } else if (blockId && params.blockId !== blockId) {
+      navigate(`/projects/${params.projectId}/${params.pageId}/${blockId}`, {
+        replace: true,
+      });
     }
   }, []);
 

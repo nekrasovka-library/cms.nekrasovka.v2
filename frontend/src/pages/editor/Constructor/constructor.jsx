@@ -26,9 +26,7 @@ const Constructor = () => {
       dispatch(fetchPageRequest({ id: pageId, ...(blockId && { blockId }) }));
     }
 
-    return () => {
-      dispatch(resetPage());
-    };
+    return () => dispatch(resetPage());
   }, [pageId]);
 
   const CONSTRUCTOR_COMPONENTS = {

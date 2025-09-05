@@ -3,6 +3,7 @@ const router = express.Router();
 const { models } = require("../models");
 const { Op, where, literal } = require("sequelize");
 const { getPageWithFilteredBlocks } = require("../helpers");
+const { EXCLUDE_TYPES } = require("../constants");
 
 // GET /api/blocks - получить список блоков с фильтрами и пагинацией
 router.get("/", async (req, res) => {
@@ -166,26 +167,31 @@ router.delete("/:id", async (req, res) => {
     const id = Number.parseInt(req.params.id, 10);
     const { blockId } = req.body || {};
     let page;
+    let blockIdToExclude = blockId;
 
     const block = await models.Block.findByPk(id);
     if (!block) return res.status(404).json({ error: "Block not found" });
 
     await block.destroy();
 
-    const blocks = await models.Block.findAll({
-      where: { pageId: block.pageId },
-    });
+    if (EXCLUDE_TYPES.includes(block.type)) {
+      blockIdToExclude = null;
+    } else {
+      const blocks = await models.Block.findAll({
+        where: { pageId: block.pageId },
+      });
 
-    for (const blockKey of blocks) {
-      if (blockKey.position > block.position) {
-        blockKey.position -= 1;
-        await blockKey.save();
+      for (const blockKey of blocks) {
+        if (blockKey.position > block.position) {
+          blockKey.position -= 1;
+          await blockKey.save();
+        }
       }
     }
 
     page = await getPageWithFilteredBlocks({
       pageId: block.pageId,
-      blockId,
+      blockId: blockIdToExclude,
     });
 
     res.status(201).json(page);

@@ -1,8 +1,8 @@
 const { models } = require("../models");
 const { Op } = require("sequelize");
+const { EXCLUDE_TYPES } = require("../constants");
 
 async function getPageWithFilteredBlocks({ pageId, blockId }) {
-  const EXCLUDE_TYPES = ["afishaEvent"];
   let WHERE = {};
   let newBlock;
   let page;

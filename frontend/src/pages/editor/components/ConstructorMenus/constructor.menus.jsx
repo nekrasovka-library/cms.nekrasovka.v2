@@ -45,7 +45,7 @@ const ConstructorMenus = () => {
       createBlockRequest({
         ...variant,
         pageId: page.items.id,
-        position: block.items.position + 1,
+        position: block.items.position,
         ...(route.params.blockId && { blockId: route.params.blockId }),
       }),
     );

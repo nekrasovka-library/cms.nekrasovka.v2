@@ -67,18 +67,10 @@ router.get("/", async (req, res) => {
 // POST /api/blocks - создать блок
 router.post("/", async (req, res) => {
   try {
-    let page;
     const { blockId, pageId, type, settings, styles, content, position } =
       req.body;
-
-    const blocks = await models.Block.findAll({ where: { pageId } });
-
-    for (const blockKey of blocks) {
-      if (blockKey.position >= position) {
-        blockKey.position += 1;
-        await blockKey.save();
-      }
-    }
+    let page;
+    let blockIdToExclude = blockId;
 
     const block = await models.Block.create({
       type,
@@ -89,9 +81,22 @@ router.post("/", async (req, res) => {
       pageId,
     });
 
+    if (EXCLUDE_TYPES.includes(type) && blockId) {
+      blockIdToExclude = block.id;
+    } else {
+      const blocks = await models.Block.findAll({ where: { pageId } });
+
+      for (const blockKey of blocks) {
+        if (blockKey.position >= position) {
+          blockKey.position += 1;
+          await blockKey.save();
+        }
+      }
+    }
+
     page = await getPageWithFilteredBlocks({
       pageId: block.pageId,
-      blockId,
+      blockId: blockIdToExclude,
     });
 
     res.status(201).json(page);

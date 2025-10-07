@@ -238,11 +238,11 @@ const AfishaPage = ({
               />
             ))}
         </AfishaMainStyled>
-        {events.total > events.items.length && (
-          <LoadMoreButton onClick={handleLoadMore}>
-            + Показать ещё
-          </LoadMoreButton>
-        )}
+        {/*{events.total > events.items.length && (*/}
+        {/*  <LoadMoreButton onClick={handleLoadMore}>*/}
+        {/*    + Показать ещё*/}
+        {/*  </LoadMoreButton>*/}
+        {/*)}*/}
       </AfishaContainerStyled>
     </AfishaPageStyled>
   );

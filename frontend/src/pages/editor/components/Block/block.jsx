@@ -76,7 +76,7 @@ const Block = ({
         settings,
         content,
         type,
-        position,
+        position: position + 1,
         pageId,
       }),
     );

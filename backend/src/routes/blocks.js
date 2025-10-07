@@ -84,7 +84,9 @@ router.post("/", async (req, res) => {
     if (EXCLUDE_TYPES.includes(type) && blockId) {
       blockIdToExclude = block.id;
     } else {
-      const blocks = await models.Block.findAll({ where: { pageId } });
+      const blocks = await models.Block.findAll({
+        where: { pageId, id: { [Op.ne]: block.id } },
+      });
 
       for (const blockKey of blocks) {
         if (blockKey.position >= position) {

@@ -68,15 +68,6 @@ router.post("/", async (req, res) => {
     const { pageId, type, settings, styles, content, position } = req.body;
     let page;
 
-    await models.Block.create({
-      type,
-      settings,
-      styles,
-      content,
-      position,
-      pageId,
-    });
-
     const blocks = await models.Block.findAll({ where: { pageId } });
 
     for (const blockKey of blocks) {
@@ -85,6 +76,15 @@ router.post("/", async (req, res) => {
         await blockKey.save();
       }
     }
+
+    await models.Block.create({
+      type,
+      settings,
+      styles,
+      content,
+      position,
+      pageId,
+    });
 
     page = await models.Page.findByPk(pageId, {
       include: [{ model: models.Block, as: "blocks" }],

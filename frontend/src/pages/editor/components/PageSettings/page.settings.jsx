@@ -32,6 +32,8 @@ const PageSettings = () => {
     dispatch(setPageChanges({ ...page.changes, ...props }));
   };
 
+  // TODO: Добавить в настройки отображение информации для Группы страниц. Показывать картинки как в выборе блока из меню. Привязать к картинкам настройки, что отдавать из content.
+
   return (
     <Container1 $isMenuOpen={isSettingsVisible}>
       <Header

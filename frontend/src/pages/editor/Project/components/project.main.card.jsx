@@ -145,11 +145,13 @@ const ProjectMainCard = ({
                   <span>{url}</span>
                 </Link>
               )}
-              <Icon
-                icon="edit"
-                type="button"
-                onClick={() => setEditedState({ url: "" })}
-              />
+              {!settings.page_type && (
+                <Icon
+                  icon="edit"
+                  type="button"
+                  onClick={() => setEditedState({ url: "" })}
+                />
+              )}
             </div>
           )}
         </ProjectMainCardPageName>
@@ -163,10 +165,12 @@ const ProjectMainCard = ({
             <Icon icon="settings" />
             <span>НАСТРОЙКИ</span>
           </div>
-          <div onClick={onDelete}>
-            <Icon icon="trash" />
-            <span>УДАЛИТЬ</span>
-          </div>
+          {!settings.page_type && (
+            <div onClick={onDelete}>
+              <Icon icon="trash" />
+              <span>УДАЛИТЬ</span>
+            </div>
+          )}
         </ProjectMainCardAction>
       </ProjectMainCardPage>
       {isTable && (

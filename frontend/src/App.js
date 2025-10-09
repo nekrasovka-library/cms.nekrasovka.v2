@@ -58,7 +58,6 @@ function App() {
             <Route path=":projectId">
               <Route index element={<Project />} />
               <Route path=":pageId" element={<Constructor />} />
-              {/*<Route path=":pageId/:blockId" element={<Constructor />} />*/}
               {/*{dynamicRoutes}*/}
             </Route>
           </Route>

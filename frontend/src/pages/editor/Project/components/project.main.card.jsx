@@ -137,7 +137,7 @@ const ProjectMainCard = ({
               {settings.page_type ? (
                 <div onClick={onType}>
                   <span>{parentUrl}</span>
-                  <span>{url}</span>
+                  <span>id</span>
                 </div>
               ) : (
                 <Link to={`${pageId}`}>

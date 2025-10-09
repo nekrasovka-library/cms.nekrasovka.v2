@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Projects from "./pages/editor/Projects/projects";
 import Project from "./pages/editor/Project/project";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { generateDynamicRoutes } from "./routeGenerator";
 import Constructor from "./pages/editor/Constructor/constructor";
@@ -12,11 +12,20 @@ import BlockDecoration from "./pages/editor/components/BlockDecoration/block.dec
 import BlockContent from "./pages/editor/components/BlockContent/block.content";
 import PageSettings from "./pages/editor/components/PageSettings/page.settings";
 import RouteParamsSync from "./route/RouteParamsSync";
+import { fetchMenusRequest } from "./features/menus/menusSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const [dynamicRoutes, setDynamicRoutes] = useState([]);
   const project = useSelector(({ project }) => project);
+  const { isVariantsLoaded } = useSelector(({ menus }) => menus);
   const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
+
+  useEffect(() => {
+    if (!isVariantsLoaded) {
+      dispatch(fetchMenusRequest());
+    }
+  }, [dispatch, isVariantsLoaded]);
 
   useEffect(() => {
     if (project.status === "succeeded") {
@@ -49,7 +58,7 @@ function App() {
             <Route path=":projectId">
               <Route index element={<Project />} />
               <Route path=":pageId" element={<Constructor />} />
-              <Route path=":pageId/:blockId" element={<Constructor />} />
+              {/*<Route path=":pageId/:blockId" element={<Constructor />} />*/}
               {/*{dynamicRoutes}*/}
             </Route>
           </Route>

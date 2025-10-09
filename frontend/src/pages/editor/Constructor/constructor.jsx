@@ -18,16 +18,16 @@ import Transition from "../components/Transition/transition";
 
 const Constructor = () => {
   const dispatch = useDispatch();
-  const { pageId, blockId } = useParams();
+  const { pageId } = useParams();
   const page = useSelector(({ page }) => page);
 
   useEffect(() => {
     if (!!pageId) {
-      dispatch(fetchPageRequest({ id: pageId, ...(blockId && { blockId }) }));
+      dispatch(fetchPageRequest({ id: pageId }));
     }
 
     return () => dispatch(resetPage());
-  }, [pageId]);
+  }, [dispatch, pageId]);
 
   const CONSTRUCTOR_COMPONENTS = {
     text: Text,

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   AuthorCardStyled,
   AuthorNameStyled,
@@ -24,7 +24,7 @@ import { formatDate, formatTime } from "../../../../helpers";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
 import ImagePreview from "../Image/image.preview";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   const dispatch = useDispatch();
@@ -32,7 +32,6 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
   const params = useParams();
-  const navigate = useNavigate();
 
   const updateText = (newText) => {
     dispatch(
@@ -43,16 +42,6 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
       }),
     );
   };
-
-  useEffect(() => {
-    if (!params.blockId && blockId) {
-      navigate(`./${blockId}`, { replace: true });
-    } else if (blockId && params.blockId !== blockId) {
-      navigate(`/projects/${params.projectId}/${params.pageId}/${blockId}`, {
-        replace: true,
-      });
-    }
-  }, []);
 
   return (
     <>

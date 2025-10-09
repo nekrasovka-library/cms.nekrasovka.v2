@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
-const { getPageWithFilteredBlocks } = require("../helpers");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
 const PAGE_INCLUDE = {
@@ -22,14 +21,14 @@ async function detachChildrenFromDeleted(pageId) {
 }
 
 // GET /api/pages/:id - получить страницу
-router.get("/:id/:blockId?", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     let page;
     const id = Number.parseInt(req.params.id, 10);
 
-    page = await getPageWithFilteredBlocks({
-      pageId: id,
-      blockId: req.params.blockId,
+    page = await models.Page.findByPk(id, {
+      include: [{ model: models.Block, as: "blocks" }],
+      order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
     });
 
     return res.json(page);

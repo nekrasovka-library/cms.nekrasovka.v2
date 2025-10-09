@@ -40,13 +40,15 @@ const PageSettings = () => {
       />
       <SettingsTitleLabel>Настройки страницы</SettingsTitleLabel>
       {page.status === "succeeded" && project.status === "succeeded" && (
-        <Parent
-          parent={page.items.settings.parent}
-          pages={project.items.pages}
-          mainPageId={project.items.settings.main_page_id}
-          handleSettingsChange={handlePageSettingsChange}
-          pageId={page.items.id}
-        />
+        <>
+          <Parent
+            parent={page.items.settings.parent}
+            pages={project.items.pages}
+            mainPageId={project.items.settings.main_page_id}
+            handleSettingsChange={handlePageSettingsChange}
+            pageId={page.items.id}
+          />
+        </>
       )}
     </Container1>
   );

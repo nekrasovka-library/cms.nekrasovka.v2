@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
+const { Op } = require("sequelize");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
 const PAGE_INCLUDE = {
@@ -35,11 +36,64 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const project = await models.Project.findByPk(req.params.id, {
-      include: [{ model: models.Page, as: "pages" }],
-      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
+      include: [
+        {
+          model: models.Page,
+          as: "pages",
+          include: [
+            {
+              model: models.Block,
+              as: "blocks",
+              required: false,
+              where: {
+                type: {
+                  [Op.notIn]: ["header", "footer"],
+                },
+              },
+            },
+          ],
+        },
+      ],
+      order: [
+        [{ model: models.Page, as: "pages" }, "id", "ASC"],
+        [
+          { model: models.Page, as: "pages" },
+          { model: models.Block, as: "blocks" },
+          "id",
+          "ASC",
+        ],
+      ],
     });
+
     if (!project) return res.status(404).json({ error: "Project not found" });
-    res.json(project);
+
+    const groupedPages = project.toJSON().pages.reduce((acc, page) => {
+      const groupIndex = acc.findIndex((group) => group.url === page.url);
+
+      if (acc[groupIndex]) {
+        if (!acc[groupIndex].data) {
+          const firstPage = { ...acc[groupIndex] };
+          acc[groupIndex] = {
+            id: firstPage.id,
+            name: firstPage.name,
+            url: firstPage.url,
+            settings: firstPage.settings,
+            projectId: firstPage.projectId,
+            data: [firstPage],
+          };
+        }
+
+        acc[groupIndex].data.push(page);
+      } else {
+        acc.push(page);
+      }
+
+      return acc;
+    }, []);
+
+    const projectResponse = project.toJSON();
+    projectResponse.pages = groupedPages;
+    res.json(projectResponse);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to fetch project" });

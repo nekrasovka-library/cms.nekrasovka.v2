@@ -61,7 +61,7 @@ const Block = ({
         settings,
         content,
         type,
-        position,
+        position: position + 1,
         ...(params.blockId && { blockId: params.blockId }),
       }),
     );
@@ -76,7 +76,7 @@ const Block = ({
         settings,
         content,
         type,
-        position: position + 1,
+        position,
         pageId,
       }),
     );

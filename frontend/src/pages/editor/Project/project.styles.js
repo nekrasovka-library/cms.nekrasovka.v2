@@ -135,42 +135,73 @@ const ProjectMainCardPageName = styled.div`
   }
 `;
 
+const ProjectMainCardGroup = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  > div {
+    font-size: 10px;
+    border: 1px solid;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+  @media (hover: hover) {
+    > div:hover {
+      background-color: #f4846b;
+      border-color: #f4846b;
+      color: #fff;
+    }
+  }
+
+  ${({ $isActive }) =>
+    $isActive
+      ? `
+    > div {
+      background-color: #f4846b;
+      border-color: #f4846b;
+      color: #fff;
+    }
+  `
+      : `> div { border-color: #edede9;}`}
+`;
+
 const ProjectMainCardAction = styled.div`
   display: flex;
   align-items: center;
   column-gap: 10px;
+
+  visibility: hidden;
+  justify-content: flex-end;
+
+  > div {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 10px;
+  }
 `;
 
-const ProjectMainCardContainer = styled.div`
+const ProjectMainCardPage = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   height: 60px;
-  border-bottom: 1px solid #d5d5d5;
-  cursor: pointer;
+
+  a {
+    color: #000;
+  }
 
   > :nth-child(2) {
     color: #979797;
     text-align: left;
   }
 
-  > :last-child {
-    visibility: hidden;
-    display: flex;
-    justify-content: flex-end;
-
-    > div {
-      display: flex;
-      align-items: center;
-      column-gap: 10px;
-      font-size: 10px;
-    }
-  }
-
   @media (hover: hover) {
     > :nth-child(1):hover a,
     > :nth-child(2):hover span,
-    > :last-child > div:hover {
+    > :nth-child(4) > div:hover {
       color: #f4846b;
     }
 
@@ -179,16 +210,54 @@ const ProjectMainCardContainer = styled.div`
       opacity: 1;
     }
 
-    &:hover > div:last-child,
     &:hover > :nth-child(1) > div svg,
-    &:hover > :nth-child(2) > div svg {
+    &:hover > :nth-child(2) > div svg,
+    &:hover > :nth-child(4) {
       visibility: visible;
     }
   }
+`;
 
-  a {
-    color: #000;
+const ProjectMainCardTable = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 60px;
+  padding-left: 25px;
+  padding-bottom: 20px;
+
+  .rc-table {
+    width: 100%;
   }
+
+  table {
+    width: 100%;
+  }
+
+  tr {
+    height: 40px;
+  }
+
+  th {
+    text-align: left;
+    padding: 0;
+  }
+
+  td {
+    padding: 0 20px 0 0;
+  }
+`;
+
+const ProjectMainCardTableActions = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+`;
+
+const ProjectMainCardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #d5d5d5;
+  cursor: pointer;
 `;
 
 const ProjectSettingsContainer = styled.div`
@@ -409,6 +478,40 @@ const ColorInput = styled.input`
   }
 `;
 
+const Button = styled.button`
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: fit-content;
+  margin: 20px 0;
+
+  &.primary {
+    &:not(:disabled) {
+      background-color: #fa8669;
+      border: none;
+      color: white;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+
+  &.secondary,
+  &.primary:disabled {
+    background: #fff;
+    border: 1px solid #b7b7b7;
+    color: #000;
+  }
+
+  @media (hover: hover) {
+    &.secondary:hover {
+      border-color: #fa8669;
+    }
+  }
+`;
+
 export {
   ProjectHeaderContainer,
   ProjectMainContainer,
@@ -429,4 +532,9 @@ export {
   ColorChange,
   ColorCircle,
   ColorInput,
+  ProjectMainCardPage,
+  ProjectMainCardTable,
+  ProjectMainCardTableActions,
+  Button,
+  ProjectMainCardGroup,
 };

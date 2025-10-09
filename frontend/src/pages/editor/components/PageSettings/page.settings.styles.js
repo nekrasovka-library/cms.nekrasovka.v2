@@ -119,8 +119,8 @@ const PaddingSelect = styled.select`
 `;
 
 const PaddingContainer = styled.div`
-  align-items: flex-end;
   display: flex;
+  flex-direction: column;
   width: 100%;
   gap: 20px;
   padding: 0 15px;

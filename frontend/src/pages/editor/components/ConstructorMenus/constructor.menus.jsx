@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   CloseMenuButton,
   Container1,
@@ -10,11 +10,7 @@ import {
 } from "./constructor.menus.styles";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "../../../../nekrasovka-ui/Icon/icon.jsx";
-import {
-  fetchMenusRequest,
-  setMenusVariants,
-  resetMenus,
-} from "../../../../features/menus/menusSlice";
+import { setMenusVariants } from "../../../../features/menus/menusSlice";
 import {
   createBlockRequest,
   resetBlock,
@@ -31,7 +27,6 @@ const ConstructorMenus = () => {
 
   const handleClose = () => {
     dispatch(setMenusVisibility());
-    dispatch(resetMenus());
     dispatch(resetBlock());
   };
 
@@ -45,19 +40,13 @@ const ConstructorMenus = () => {
       createBlockRequest({
         ...variant,
         pageId: page.items.id,
-        position: block.items.position,
+        position: block.items.position + 1,
         ...(route.params.blockId && { blockId: route.params.blockId }),
       }),
     );
 
     handleClose();
   };
-
-  useEffect(() => {
-    if (isMenusVisible) {
-      dispatch(fetchMenusRequest());
-    }
-  }, [dispatch, isMenusVisible]);
 
   return (
     <>

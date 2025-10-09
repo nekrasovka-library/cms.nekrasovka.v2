@@ -12,7 +12,6 @@ export function apiFetchBlock({ payload }) {
 }
 
 export function apiCreateBlock({ payload }) {
-  console.log("❗", payload);
   const url = `${baseApiUrl}/api/blocks`;
   return fetch(url, {
     method: "POST",

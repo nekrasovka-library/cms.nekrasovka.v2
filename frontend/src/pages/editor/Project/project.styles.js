@@ -262,6 +262,10 @@ const ProjectMainCardTable = styled.div`
       -webkit-line-clamp: 3;
     }
   }
+
+  button {
+    font-size: 13px;
+  }
 `;
 
 const ProjectMainCardTableActions = styled.div`

@@ -220,7 +220,7 @@ const AfishaPage = ({
                 formatUrl={formatUrl}
                 projectId={params.projectId}
                 eventId={event.id}
-                childPageId={settings.child_page_id}
+                pageId={event.pageId}
               />
             ))}
           {view === "list" &&
@@ -234,7 +234,7 @@ const AfishaPage = ({
                 formatUrl={formatUrl}
                 projectId={params.projectId}
                 eventId={event.id}
-                childPageId={settings.child_page_id}
+                pageId={event.pageId}
               />
             ))}
         </AfishaMainStyled>

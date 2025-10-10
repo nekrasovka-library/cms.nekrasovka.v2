@@ -185,7 +185,7 @@ const AfishaMain = ({
       <AfishaWrapperStyled $maxWidth={maxWidth}>
         <AfishaHeaderStyled>
           <AfishaHeaderTitleStyled>Афиша</AfishaHeaderTitleStyled>
-          <AfishaHeaderLinkStyled as={Link} to="afisha">
+          <AfishaHeaderLinkStyled as={Link} to={settings.child_page_id}>
             <span>Все события</span>
             <Icon icon="arrowRightLong" />
           </AfishaHeaderLinkStyled>
@@ -210,6 +210,7 @@ const AfishaMain = ({
               <EventCard
                 key={event.id}
                 eventId={event.id}
+                pageId={event.pageId}
                 event={event.content}
                 loading={events.status === "loading"}
                 formatDate={formatDate}
@@ -217,7 +218,6 @@ const AfishaMain = ({
                 formatUrl={formatUrl}
                 createBackgroundImageUrl={createBackgroundImageUrl}
                 projectId={params.projectId}
-                childPageId={settings.child_page_id}
               />
             ))}
           </EventsContainerStyled>

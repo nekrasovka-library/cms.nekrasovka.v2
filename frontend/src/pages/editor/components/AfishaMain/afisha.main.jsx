@@ -176,6 +176,8 @@ const AfishaMain = ({
     );
   }
 
+  console.log("❗", settings.child_page_id);
+
   return (
     <AfishaContainerStyled
       $backgroundColor={backgroundColor}
@@ -185,7 +187,10 @@ const AfishaMain = ({
       <AfishaWrapperStyled $maxWidth={maxWidth}>
         <AfishaHeaderStyled>
           <AfishaHeaderTitleStyled>Афиша</AfishaHeaderTitleStyled>
-          <AfishaHeaderLinkStyled as={Link} to={settings.child_page_id}>
+          <AfishaHeaderLinkStyled
+            as={Link}
+            to={`/projects/${params.projectId}/${settings.child_page_id}`}
+          >
             <span>Все события</span>
             <Icon icon="arrowRightLong" />
           </AfishaHeaderLinkStyled>

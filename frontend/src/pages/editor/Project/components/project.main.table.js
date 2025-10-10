@@ -5,6 +5,8 @@ import React from "react";
 import { ProjectMainCardTableActions } from "../project.styles";
 import { deleteInProjectPageRequest } from "../../../../features/project/projectSlice";
 import { useDispatch } from "react-redux";
+import format from "date-fns/format";
+import locale from "date-fns/locale/ru";
 
 const CMSTable = ({ tableData, projectId, navigate }) => {
   const dispatch = useDispatch();
@@ -15,6 +17,7 @@ const CMSTable = ({ tableData, projectId, navigate }) => {
       dataIndex: ["blocks", "0", "content", "date"], // Access date from blocks[0]
       key: "date",
       width: "auto",
+      render: (text) => format(new Date(text), "dd.MM.yyyy", { locale }),
     },
     {
       title: "Заголовок",

@@ -16,7 +16,8 @@
     "styled-components": "^6.1.19",
     "suneditor-react": "^3.6.1",
     "suneditor": "^2.47.5",
-    "@rc-component/table": "^1.8.1"
+    "@rc-component/table": "^1.8.1",
+    "date-fns": "^2.29.3"
   },
   "devDependencies": {
     "rimraf": "^6.0.1"

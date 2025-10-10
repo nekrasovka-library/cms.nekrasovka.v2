@@ -86,6 +86,7 @@ async function detachChildrenFromDeleted(pageId) {
 
 // PUT /api/projects/:id - изменение проекта
 router.put("/:id", async (req, res) => {
+  let projectResponse;
   try {
     const { name, settings, url, styles, routes } = req.body || {};
     const project = await models.Project.findByPk(req.params.id, {
@@ -169,9 +170,8 @@ router.put("/:id", async (req, res) => {
     }
 
     await project.save();
-    await project.reload(PAGE_INCLUDE);
-
-    res.json(project);
+    projectResponse = getGroupedPages(project);
+    res.json(projectResponse);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to update project" });

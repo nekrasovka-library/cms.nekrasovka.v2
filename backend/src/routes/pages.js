@@ -147,8 +147,8 @@ router.post("/", async (req, res) => {
     project.routes = [...project.routes, newRoute];
 
     await project.save();
-    projectResponse = getGroupedPages(project);
 
+    projectResponse = getGroupedPages(project);
     res.status(201).send(projectResponse);
   } catch (e) {
     console.error(e);
@@ -259,7 +259,9 @@ router.put("/:id", async (req, res) => {
       ],
       order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
+
     projectResponse = getGroupedPages(project);
+
     res.status(201).send(projectResponse);
   } catch (e) {
     console.error(e);
@@ -337,6 +339,7 @@ router.delete("/:id", async (req, res) => {
     }
 
     await project.save();
+
     projectResponse = getGroupedPages(project);
 
     res.status(201).send(projectResponse);

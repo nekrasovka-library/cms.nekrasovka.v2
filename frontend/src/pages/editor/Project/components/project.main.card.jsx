@@ -35,6 +35,7 @@ const ProjectMainCard = ({
   const [editedState, setEditedState] = useState({});
   const [isTable, setIsTable] = useState(false);
   const parentUrl = settings.parent.url ? `${settings.parent.url}/:` : "";
+  const tableButtonName = tableData?.length > 0 ? tableData[0].name : "";
 
   const handleGroup = () => {
     // const page_type = type ? 0 : 1;
@@ -46,13 +47,11 @@ const ProjectMainCard = ({
     //     type: page_type,
     //   }),
     // );
-    //
-    // if (!!page_type) {
-    //   getTableData();
-    // }
   };
 
   const handleCreatePage = () => {
+    if (tableData.length === 0) return;
+
     const params = {
       url: tableData[0].url,
       styles: tableData[0].styles,
@@ -190,9 +189,9 @@ const ProjectMainCard = ({
             className="secondary"
             onClick={handleCreatePage}
           >
-            Добавить {tableData[0].name}
+            Добавить {tableButtonName}
           </Button>
-          {tableData && (
+          {tableData?.length > 0 && (
             <CMSTable
               tableData={tableData}
               pageId={pageId}

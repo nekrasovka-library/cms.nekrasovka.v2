@@ -149,9 +149,7 @@ const ProjectMainCardGroup = styled.div`
 
   @media (hover: hover) {
     > div:hover {
-      background-color: #f4846b;
       border-color: #f4846b;
-      color: #fff;
     }
   }
 

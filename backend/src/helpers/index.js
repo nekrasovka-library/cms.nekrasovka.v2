@@ -26,8 +26,23 @@ function getGroupedPages(project) {
     return acc;
   }, []);
 
+  const groupedPagesChecked = groupedPages.map((page) => {
+    if (page.type && !page.data) {
+      return {
+        id: page.id,
+        name: page.name,
+        url: page.url,
+        settings: page.settings,
+        projectId: page.projectId,
+        type: page.type,
+        data: [page],
+      };
+    }
+    return page;
+  });
+
   const projectResponse = project.toJSON();
-  projectResponse.pages = groupedPages;
+  projectResponse.pages = groupedPagesChecked;
 
   return projectResponse;
 }

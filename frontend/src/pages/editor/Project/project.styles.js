@@ -240,7 +240,7 @@ const ProjectMainCardTable = styled.div`
   }
 
   tr {
-    border-bottom: 1px solid #d5d5d5; /* Толщина, стиль и цвет линии */
+    border-bottom: 1px solid rgba(213, 213, 213, 0.4); /* Толщина, стиль и цвет линии */
 
     &:last-child {
       border-bottom: none;

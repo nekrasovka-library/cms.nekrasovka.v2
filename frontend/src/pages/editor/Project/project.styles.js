@@ -222,26 +222,45 @@ const ProjectMainCardTable = styled.div`
   min-height: 60px;
   padding-left: 25px;
   padding-bottom: 20px;
+  font-size: 14px;
 
   .rc-table {
     width: 100%;
   }
 
   table {
+    border-collapse: collapse; /* Важно для корректного отображения границ */
     width: 100%;
   }
 
-  tr {
-    height: 40px;
-  }
-
   th {
+    height: 40px;
     text-align: left;
     padding: 0;
   }
 
+  tr {
+    border-bottom: 1px solid #d5d5d5; /* Толщина, стиль и цвет линии */
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
   td {
-    padding: 0 20px 0 0;
+    padding: 10px 0;
+    vertical-align: top;
+    line-height: 1.5;
+
+    &:nth-child(3) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      max-height: calc(1.5 * 3 * 1em + 15px);
+      max-width: 600px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
   }
 `;
 

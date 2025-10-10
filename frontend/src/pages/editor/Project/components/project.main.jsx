@@ -15,7 +15,7 @@ const ProjectMain = ({ pages, mainPageId }) => {
           if (b.id === mainPageId) return 1;
           return a.id - b.id;
         })
-        .map(({ id, name, url, settings, data }) => {
+        .map(({ id, name, url, settings, data, type }) => {
           return (
             <ProjectMainCard
               key={id}
@@ -25,6 +25,7 @@ const ProjectMain = ({ pages, mainPageId }) => {
               url={url}
               settings={settings}
               tableData={data}
+              type={type}
             />
           );
         })}

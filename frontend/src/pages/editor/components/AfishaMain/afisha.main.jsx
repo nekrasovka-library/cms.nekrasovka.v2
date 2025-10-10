@@ -176,8 +176,6 @@ const AfishaMain = ({
     );
   }
 
-  console.log("❗", settings.child_page_id);
-
   return (
     <AfishaContainerStyled
       $backgroundColor={backgroundColor}

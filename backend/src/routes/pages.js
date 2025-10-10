@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
+const { Op } = require("sequelize");
+const { getGroupedPages } = require("../helpers");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
-const PAGE_INCLUDE = {
-  include: [{ model: models.Page, as: "pages" }],
-};
 
 async function detachChildrenFromDeleted(pageId) {
   const childPages = await models.Page.findAll({
@@ -38,8 +37,54 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// POST /api/pages/grouped - создание сгруппированной страницы
+router.post("/grouped", async (req, res) => {
+  try {
+    const params = req.body || {};
+    if (!params.projectId) {
+      return res.status(400).json({ error: "Project ID is required" });
+    }
+
+    const page = await models.Page.create({ ...params });
+
+    const groupedMainPage = await models.Page.findOne({
+      where: {
+        projectId: params.projectId,
+        url: params.url,
+      },
+    });
+
+    const groupedPageBlocks = await models.Block.findAll({
+      where: { pageId: groupedMainPage.id },
+    });
+
+    for (const block of groupedPageBlocks) {
+      const { type, position, styles, variantId } = block.toJSON();
+      const variant = await models.Variant.findByPk(variantId, {
+        attributes: ["content", "settings"],
+      });
+
+      await models.Block.create({
+        pageId: page.id,
+        settings: variant.settings,
+        content: variant.content,
+        type,
+        position,
+        styles,
+        variantId,
+      });
+    }
+
+    res.status(201).json(page.id);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to create page" });
+  }
+});
+
 // POST /api/pages - создание страницы
 router.post("/", async (req, res) => {
+  let projectResponse;
   try {
     const params = req.body || {};
 
@@ -69,7 +114,26 @@ router.post("/", async (req, res) => {
     await page.save();
 
     const project = await models.Project.findByPk(page.projectId, {
-      include: [{ model: models.Page, as: "pages" }],
+      include: [
+        {
+          model: models.Page,
+          as: "pages",
+          include: [
+            {
+              model: models.Block,
+              as: "blocks",
+              required: false,
+              where: {
+                type: {
+                  [Op.notIn]: ["header", "footer"],
+                },
+              },
+            },
+          ],
+          order: [[{ model: models.Block, as: "blocks" }, "id", "ASC"]],
+        },
+      ],
+      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
 
     if (project.pages.length === 1) {
@@ -83,7 +147,9 @@ router.post("/", async (req, res) => {
     project.routes = [...project.routes, newRoute];
 
     await project.save();
-    res.status(201).json(project);
+    projectResponse = getGroupedPages(project);
+
+    res.status(201).send(projectResponse);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to create page" });
@@ -92,15 +158,61 @@ router.post("/", async (req, res) => {
 
 // PUT /api/pages/:id - изменить страницу
 router.put("/:id", async (req, res) => {
+  let pages;
+  let isPages = false;
+  let projectResponse;
+
   try {
-    const { name, url, settings, styles } = req.body || {};
+    const { name, url, settings, styles, type } = req.body || {};
     const id = Number.parseInt(req.params.id, 10);
     const page = await models.Page.findByPk(id);
     if (!page) return res.status(404).json({ error: "Page not found" });
 
-    if (typeof settings !== "undefined") page.settings = settings;
-    if (typeof styles !== "undefined") page.styles = styles;
-    if (typeof name !== "undefined") page.name = name;
+    if (page.type) {
+      pages = await models.Page.findAll({ where: { url: page.url } });
+      isPages = pages.length > 0;
+    }
+
+    if (typeof type !== "undefined") {
+      page.type = type;
+
+      if (isPages) {
+        for (const pageKey of pages) {
+          pageKey.type = type;
+          await pageKey.save();
+        }
+      }
+    }
+    if (typeof settings !== "undefined") {
+      page.settings = settings;
+
+      if (isPages) {
+        for (const pageKey of pages) {
+          pageKey.settings = settings;
+          await pageKey.save();
+        }
+      }
+    }
+    if (typeof styles !== "undefined") {
+      page.styles = styles;
+
+      if (isPages) {
+        for (const pageKey of pages) {
+          pageKey.styles = styles;
+          await pageKey.save();
+        }
+      }
+    }
+    if (typeof name !== "undefined") {
+      page.name = name;
+
+      if (isPages) {
+        for (const pageKey of pages) {
+          pageKey.name = name;
+          await pageKey.save();
+        }
+      }
+    }
     if (typeof url !== "undefined") {
       page.url = url;
 
@@ -126,10 +238,29 @@ router.put("/:id", async (req, res) => {
     await page.save();
 
     const project = await models.Project.findByPk(page.projectId, {
-      include: [{ model: models.Page, as: "pages" }],
+      include: [
+        {
+          model: models.Page,
+          as: "pages",
+          include: [
+            {
+              model: models.Block,
+              as: "blocks",
+              required: false,
+              where: {
+                type: {
+                  [Op.notIn]: ["header", "footer"],
+                },
+              },
+            },
+          ],
+          order: [[{ model: models.Block, as: "blocks" }, "id", "ASC"]],
+        },
+      ],
+      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
-
-    res.status(201).json(project);
+    projectResponse = getGroupedPages(project);
+    res.status(201).send(projectResponse);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to update page" });
@@ -138,6 +269,8 @@ router.put("/:id", async (req, res) => {
 
 // DELETE /api/pages/:id - удалить страницу
 router.delete("/:id", async (req, res) => {
+  let projectResponse;
+
   try {
     const id = Number.parseInt(req.params.id, 10);
     const page = await models.Page.findByPk(id);
@@ -145,7 +278,26 @@ router.delete("/:id", async (req, res) => {
     await page.destroy();
 
     const project = await models.Project.findByPk(page.projectId, {
-      include: [{ model: models.Page, as: "pages" }],
+      include: [
+        {
+          model: models.Page,
+          as: "pages",
+          include: [
+            {
+              model: models.Block,
+              as: "blocks",
+              required: false,
+              where: {
+                type: {
+                  [Op.notIn]: ["header", "footer"],
+                },
+              },
+            },
+          ],
+          order: [[{ model: models.Block, as: "blocks" }, "id", "ASC"]],
+        },
+      ],
+      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
 
     project.routes = project.routes.filter((r) => r.id !== id);
@@ -185,9 +337,9 @@ router.delete("/:id", async (req, res) => {
     }
 
     await project.save();
-    await project.reload(PAGE_INCLUDE);
+    projectResponse = getGroupedPages(project);
 
-    res.status(201).send(project);
+    res.status(201).send(projectResponse);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "Failed to delete page" });

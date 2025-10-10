@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { models } = require("../models");
 const { Op } = require("sequelize");
+const { getGroupedPages } = require("../helpers");
 
 const EMPTY_PARENT = { pageId: null, url: "", name: "" };
 const PAGE_INCLUDE = {
@@ -34,6 +35,8 @@ router.post("/", async (req, res) => {
 
 // GET /api/projects/:id - один проект (с его страницами)
 router.get("/:id", async (req, res) => {
+  let projectResponse;
+
   try {
     const project = await models.Project.findByPk(req.params.id, {
       include: [
@@ -52,47 +55,15 @@ router.get("/:id", async (req, res) => {
               },
             },
           ],
+          order: [[{ model: models.Block, as: "blocks" }, "id", "ASC"]],
         },
       ],
-      order: [
-        [{ model: models.Page, as: "pages" }, "id", "ASC"],
-        [
-          { model: models.Page, as: "pages" },
-          { model: models.Block, as: "blocks" },
-          "id",
-          "ASC",
-        ],
-      ],
+      order: [[{ model: models.Page, as: "pages" }, "id", "ASC"]],
     });
 
     if (!project) return res.status(404).json({ error: "Project not found" });
 
-    const groupedPages = project.toJSON().pages.reduce((acc, page) => {
-      const groupIndex = acc.findIndex((group) => group.url === page.url);
-
-      if (acc[groupIndex]) {
-        if (!acc[groupIndex].data) {
-          const firstPage = { ...acc[groupIndex] };
-          acc[groupIndex] = {
-            id: firstPage.id,
-            name: firstPage.name,
-            url: firstPage.url,
-            settings: firstPage.settings,
-            projectId: firstPage.projectId,
-            data: [firstPage],
-          };
-        }
-
-        acc[groupIndex].data.push(page);
-      } else {
-        acc.push(page);
-      }
-
-      return acc;
-    }, []);
-
-    const projectResponse = project.toJSON();
-    projectResponse.pages = groupedPages;
+    projectResponse = getGroupedPages(project);
     res.json(projectResponse);
   } catch (e) {
     console.error(e);

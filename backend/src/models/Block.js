@@ -1,46 +1,50 @@
 module.exports = (sequelize, DataTypes) => {
   const Block = sequelize.define(
-    'Block',
+    "Block",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       pageId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       type: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'text'
+        defaultValue: "text",
       },
       position: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
       },
       settings: {
         type: DataTypes.JSON,
         allowNull: false,
-        defaultValue: {}
+        defaultValue: {},
       },
       styles: {
         type: DataTypes.JSON,
         allowNull: false,
-        defaultValue: {}
+        defaultValue: {},
       },
       content: {
         type: DataTypes.JSON,
         allowNull: false,
-        defaultValue: {}
-      }
+        defaultValue: {},
+      },
+      variantId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
-      tableName: 'blocks',
-      timestamps: true
-    }
+      tableName: "blocks",
+      timestamps: true,
+    },
   );
 
   return Block;

@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: {},
       },
+      type: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       tableName: "pages",

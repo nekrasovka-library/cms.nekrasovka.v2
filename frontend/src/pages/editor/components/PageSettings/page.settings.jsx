@@ -44,7 +44,7 @@ const PageSettings = () => {
       {page.status === "succeeded" && project.status === "succeeded" && (
         <>
           <Parent
-            parent={page.items.settings.parent}
+            parent={page.changes.settings?.parent || page.items.settings.parent}
             pages={project.items.pages}
             mainPageId={project.items.settings.main_page_id}
             handleSettingsChange={handlePageSettingsChange}

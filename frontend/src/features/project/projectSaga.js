@@ -9,7 +9,12 @@ import {
   updateInProjectPageRequest,
 } from "./projectSlice";
 import { apiFetchProject, apiUpdateProject } from "./projectApi";
-import { apiCreatePage, apiDeletePage, apiUpdatePage } from "../page/pageApi";
+import {
+  apiCreateGroupedPage,
+  apiCreatePage,
+  apiDeletePage,
+  apiUpdatePage,
+} from "../page/pageApi";
 
 export function* handleFetchProject(params) {
   try {

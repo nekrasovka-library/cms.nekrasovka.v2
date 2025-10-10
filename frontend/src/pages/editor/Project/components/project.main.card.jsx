@@ -18,7 +18,7 @@ import {
 import { fetchPageSuccess } from "../../../../features/page/pageSlice";
 import { setSettingsVisibility } from "../../../../features/visibility/visibilitySlice";
 import CMSTable from "./project.main.table";
-import axios from "axios";
+import { apiCreateGroupedPage } from "../../../../features/page/pageApi";
 
 const ProjectMainCard = ({
   settings,
@@ -27,6 +27,7 @@ const ProjectMainCard = ({
   name,
   url,
   tableData,
+  type,
 }) => {
   const { projectId } = useParams();
   const dispatch = useDispatch();
@@ -35,16 +36,14 @@ const ProjectMainCard = ({
   const [isTable, setIsTable] = useState(false);
   const parentUrl = settings.parent.url ? `${settings.parent.url}/:` : "";
 
-  const getTableData = () => {};
-
   const handleGroup = () => {
-    // const page_type = settings.page_type ? 0 : 1;
+    // const page_type = type ? 0 : 1;
     //
     // setIsTable(!!page_type);
     // dispatch(
     //   updateInProjectPageRequest({
     //     id: pageId,
-    //     settings: { ...settings, page_type },
+    //     type: page_type,
     //   }),
     // );
     //
@@ -53,10 +52,21 @@ const ProjectMainCard = ({
     // }
   };
 
-  const handleCreateBlock = () => {
-    // navigate(`/projects/${projectId}/${pageId}`, {
-    //   replace: true,
-    // });
+  const handleCreatePage = () => {
+    const params = {
+      url: tableData[0].url,
+      styles: tableData[0].styles,
+      settings: tableData[0].settings,
+      name: tableData[0].name,
+      type: tableData[0].type,
+      projectId,
+    };
+
+    apiCreateGroupedPage({ payload: params }).then((res) => {
+      navigate(`/projects/${projectId}/${res}`, {
+        replace: true,
+      });
+    });
   };
 
   const onType = async () => {
@@ -103,7 +113,7 @@ const ProjectMainCard = ({
             </div>
           ) : (
             <div>
-              {settings.page_type ? (
+              {type ? (
                 <span onClick={onType}>{name}</span>
               ) : (
                 <Link to={`${pageId}`}>
@@ -134,7 +144,7 @@ const ProjectMainCard = ({
             </div>
           ) : (
             <div>
-              {settings.page_type ? (
+              {type ? (
                 <div onClick={onType}>
                   <span>{parentUrl}</span>
                   <span>id</span>
@@ -145,7 +155,7 @@ const ProjectMainCard = ({
                   <span>{url}</span>
                 </Link>
               )}
-              {!settings.page_type && (
+              {!type && (
                 <Icon
                   icon="edit"
                   type="button"
@@ -155,7 +165,7 @@ const ProjectMainCard = ({
             </div>
           )}
         </ProjectMainCardPageName>
-        <ProjectMainCardGroup $isActive={!!settings.page_type}>
+        <ProjectMainCardGroup $isActive={!!type}>
           <div onClick={handleGroup}>
             <span>ГРУППА СТРАНИЦ</span>
           </div>
@@ -165,7 +175,7 @@ const ProjectMainCard = ({
             <Icon icon="settings" />
             <span>НАСТРОЙКИ</span>
           </div>
-          {!settings.page_type && (
+          {!type && (
             <div onClick={onDelete}>
               <Icon icon="trash" />
               <span>УДАЛИТЬ</span>
@@ -178,9 +188,9 @@ const ProjectMainCard = ({
           <Button
             type="button"
             className="secondary"
-            onClick={handleCreateBlock}
+            onClick={handleCreatePage}
           >
-            Добавить
+            Добавить {tableData[0].name}
           </Button>
           {tableData && (
             <CMSTable

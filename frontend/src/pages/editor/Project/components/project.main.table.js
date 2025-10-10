@@ -3,8 +3,12 @@ import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import Tooltip from "../../../../nekrasovka-ui/Tooltip/tooltip";
 import React from "react";
 import { ProjectMainCardTableActions } from "../project.styles";
+import { deleteInProjectPageRequest } from "../../../../features/project/projectSlice";
+import { useDispatch } from "react-redux";
 
 const CMSTable = ({ tableData, projectId, navigate }) => {
+  const dispatch = useDispatch();
+
   const columns = [
     {
       title: "Дата",
@@ -37,9 +41,9 @@ const CMSTable = ({ tableData, projectId, navigate }) => {
               <Icon
                 icon="trash"
                 type="button"
-                onClick={() => {
-                  console.log("❗", record.id);
-                }}
+                onClick={() =>
+                  dispatch(deleteInProjectPageRequest({ id: record.id }))
+                }
               />
             </Tooltip>
             <Tooltip text="Дублировать">

@@ -17,7 +17,8 @@ const CMSTable = ({ tableData, projectId, navigate }) => {
       dataIndex: ["blocks", "0", "content", "date"], // Access date from blocks[0]
       key: "date",
       width: "auto",
-      render: (text) => format(new Date(text), "dd.MM.yyyy", { locale }),
+      render: (text) =>
+        text ? format(new Date(text), "dd.MM.yyyy", { locale }) : "",
     },
     {
       title: "Заголовок",

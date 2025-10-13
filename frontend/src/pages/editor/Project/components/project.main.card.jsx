@@ -189,7 +189,7 @@ const ProjectMainCard = ({
             className="secondary"
             onClick={handleCreatePage}
           >
-            Добавить {tableButtonName}
+            Создать {tableButtonName}
           </Button>
           {tableData?.length > 0 && (
             <CMSTable

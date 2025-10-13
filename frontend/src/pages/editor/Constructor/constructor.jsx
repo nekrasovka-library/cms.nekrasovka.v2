@@ -47,12 +47,22 @@ const Constructor = () => {
       <Transition key={page.status === "succeeded"}>
         {page.items.blocks?.length > 0 ? (
           page.items.blocks.map(
-            ({ id, pageId, content, type, styles, position, settings }) => {
+            ({
+              id,
+              pageId,
+              variantId,
+              content,
+              type,
+              styles,
+              position,
+              settings,
+            }) => {
               return (
                 <Block
                   key={id}
                   blockId={id}
                   pageId={pageId}
+                  variantId={variantId}
                   type={type}
                   content={content}
                   styles={styles}

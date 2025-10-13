@@ -266,6 +266,13 @@ const ProjectMainCardTable = styled.div`
   button {
     font-size: 13px;
   }
+
+  @media (hover: hover) {
+    button:hover {
+      background-color: #f4846b;
+      color: #fff;
+    }
+  }
 `;
 
 const ProjectMainCardTableActions = styled.div`

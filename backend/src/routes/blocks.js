@@ -65,7 +65,8 @@ router.get("/", async (req, res) => {
 // POST /api/blocks - создать блок
 router.post("/", async (req, res) => {
   try {
-    const { pageId, type, settings, styles, content, position } = req.body;
+    const { pageId, variantId, type, settings, styles, content, position } =
+      req.body;
     let page;
 
     const blocks = await models.Block.findAll({ where: { pageId } });
@@ -84,6 +85,7 @@ router.post("/", async (req, res) => {
       content,
       position,
       pageId,
+      variantId,
     });
 
     page = await models.Page.findByPk(pageId, {

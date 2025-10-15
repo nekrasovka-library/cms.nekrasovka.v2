@@ -13,6 +13,7 @@ const ImageContent = ({
   label,
   type,
   value,
+  arrayValues,
   id,
   isDisabled,
   handleContentChange,
@@ -34,7 +35,7 @@ const ImageContent = ({
       if (id === undefined) {
         newValue = response.data.file.filename;
       } else {
-        newValue = [...value];
+        newValue = [...arrayValues];
         newValue[id] = response.data.file.filename;
       }
 
@@ -57,7 +58,7 @@ const ImageContent = ({
         <TextInput
           type="text"
           name={type}
-          value={value[id]}
+          value={value}
           onChange={handleContentChange}
           disabled={isDisabled}
         />
@@ -78,7 +79,8 @@ const Image = ({ label, value, type, tracks, handleContentChange }) => {
           key={index}
           label={label}
           type={type}
-          value={value}
+          value={value[index]}
+          arrayValues={value}
           id={index}
           handleContentChange={handleContentChange}
         />

@@ -8,7 +8,7 @@ import Editor from "../Editor/editor";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
 import { calculateBlockWidth } from "../../../../helpers";
-import ImageConstructor from "../Image/image.constructor";
+import ImagePreview from "../Image/image.preview";
 
 const TeamPerson = ({
   content,
@@ -30,15 +30,6 @@ const TeamPerson = ({
     );
   };
 
-  const updateImage = (newText) => {
-    dispatch(
-      updateBlockRequest({
-        id: blockId,
-        content: { picture_id: newText[0] },
-      }),
-    );
-  };
-
   return (
     <TeamPersonStyled
       $backgroundColor={backgroundColor}
@@ -47,12 +38,7 @@ const TeamPerson = ({
     >
       <TeamPersonComponent $maxWidth={maxWidth}>
         <AuthorCardStyled>
-          <ImageConstructor
-            text={content.picture_id}
-            borderRadius="50"
-            updateImage={updateImage}
-            blockId={blockId}
-          />
+          <ImagePreview text={content.picture_id} borderRadius="50" />
           <div>
             <Editor
               text={content.text}

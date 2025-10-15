@@ -71,7 +71,7 @@ const ProjectMainCard = ({
     });
   };
 
-  const handleCopyPage = ({ record }) => {
+  const handleCopyPage = (record) => {
     const params = {
       pageId: record.id,
       projectId: record.projectId,

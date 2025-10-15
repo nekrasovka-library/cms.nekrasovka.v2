@@ -22,6 +22,7 @@ import search from "./search";
 import menu from "./menu";
 import mozaic from "./mozaic";
 import list from "./list";
+import picture from "./picture";
 
 export default {
   add,
@@ -48,4 +49,5 @@ export default {
   menu,
   mozaic,
   list,
+  picture,
 };

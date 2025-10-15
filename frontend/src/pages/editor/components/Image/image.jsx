@@ -18,18 +18,7 @@ const Image = ({
   paddingBottom,
 }) => {
   const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
-  const dispatch = useDispatch();
   maxWidth = calculateBlockWidth(maxWidth);
-
-  const updateImage = (newText) => {
-    dispatch({
-      type: "UPDATE_BLOCK",
-      payload: {
-        blockId,
-        text: newText,
-      },
-    });
-  };
 
   return (
     <ImageContainer
@@ -37,26 +26,13 @@ const Image = ({
       $paddingTop={paddingTop}
       $paddingBottom={paddingBottom}
     >
-      {isPreviewVisible ? (
-        <ImagePreview
-          text={text}
-          height={height}
-          borderRadius={borderRadius}
-          imgIndex={imgIndex}
-          maxWidth={maxWidth}
-        />
-      ) : (
-        <ImageConstructor
-          blockId={blockId}
-          tracks={tracks}
-          text={text}
-          imgIndex={imgIndex}
-          height={height}
-          borderRadius={borderRadius}
-          maxWidth={maxWidth}
-          updateImage={updateImage}
-        />
-      )}
+      <ImagePreview
+        text={text}
+        height={height}
+        borderRadius={borderRadius}
+        imgIndex={imgIndex}
+        maxWidth={maxWidth}
+      />
     </ImageContainer>
   );
 };

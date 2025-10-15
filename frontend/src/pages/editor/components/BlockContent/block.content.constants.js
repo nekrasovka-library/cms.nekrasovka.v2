@@ -1,5 +1,6 @@
 import Select from "./components/content.select";
 import Text from "./components/content.text";
+import Image from "./components/content.image";
 import Calendar from "./components/content.calendar";
 import Switch from "./components/content.switch";
 
@@ -42,6 +43,10 @@ export const BLOCK_CONTENT_TYPES = {
       label: "Местоположение",
       options: [
         {
+          value: "",
+          label: "Не выбрано",
+        },
+        {
           value: "Конференц-зал / 5 этаж",
           label: "Конференц-зал / 5 этаж",
         },
@@ -53,7 +58,7 @@ export const BLOCK_CONTENT_TYPES = {
     },
   },
   picture_id: {
-    element: Text,
+    element: Image,
     params: {
       label: "ID изображения",
     },
@@ -74,24 +79,6 @@ export const BLOCK_CONTENT_TYPES = {
     element: Text,
     params: {
       label: "Заголовок",
-    },
-  },
-  author_name: {
-    element: Text,
-    params: {
-      label: "Имя автора",
-    },
-  },
-  author_text: {
-    element: Text,
-    params: {
-      label: "Об авторе",
-    },
-  },
-  author_picture_id: {
-    element: Text,
-    params: {
-      label: "ID изображения автора",
     },
   },
   date: {

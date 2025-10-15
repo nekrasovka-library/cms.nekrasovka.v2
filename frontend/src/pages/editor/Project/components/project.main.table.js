@@ -21,19 +21,6 @@ const CMSTable = ({ tableData, projectId, navigate }) => {
         text ? format(new Date(text), "dd.MM.yyyy", { locale }) : "",
     },
     {
-      title: "Заголовок",
-      dataIndex: ["blocks", "0", "content", "title"], // Access title from blocks[0]
-      key: "title",
-      width: "auto",
-      onCell: (record) => ({
-        onClick: () => {
-          navigate(`/projects/${projectId}/${record.id}`, {
-            replace: true,
-          });
-        },
-      }),
-    },
-    {
       title: "Описание",
       dataIndex: ["blocks", "0", "content", "text"], // Access title from blocks[0]
       key: "text",

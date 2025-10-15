@@ -12,8 +12,6 @@ import {
 } from "./carousel.styles.js";
 import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import ImagePreview from "../Image/image.preview";
-import ImageConstructor from "../Image/image.constructor";
-import { useDispatch, useSelector } from "react-redux";
 import { calculateBlockWidth } from "../../../../helpers";
 
 const DEFAULT_MAX_WIDTH = 1200;
@@ -87,7 +85,7 @@ const useCarousel = (itemsCount, autoScrollInterval) => {
 };
 
 const Carousel = ({
-  text,
+  picture_id,
   autoScrollInterval = DEFAULT_AUTO_SCROLL,
   overhang = DEFAULT_OVERHANG,
   gap = DEFAULT_GAP,
@@ -111,13 +109,7 @@ const Carousel = ({
     navigateToNext,
     navigateToPrev,
   } = useCarousel(tracks, autoScrollInterval);
-  const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
-  const dispatch = useDispatch();
   maxWidth = calculateBlockWidth(maxWidth);
-
-  const updateImage = (newText) => {
-    dispatch();
-  };
 
   return (
     <CarouselContainer
@@ -142,24 +134,12 @@ const Carousel = ({
           >
             {Array.from({ length: tracks }).map((_, index) => (
               <CarouselItem key={index} $gap={gap} $overhang={overhang}>
-                {isPreviewVisible ? (
-                  <ImagePreview
-                    text={text}
-                    height={height}
-                    borderRadius={borderRadius}
-                    imgIndex={index}
-                  />
-                ) : (
-                  <ImageConstructor
-                    blockId={blockId}
-                    tracks={tracks}
-                    text={text}
-                    imgIndex={index}
-                    height={height}
-                    borderRadius={borderRadius}
-                    updateImage={updateImage}
-                  />
-                )}
+                <ImagePreview
+                  text={picture_id}
+                  height={height}
+                  borderRadius={borderRadius}
+                  imgIndex={index}
+                />
               </CarouselItem>
             ))}
           </CarouselTrack>

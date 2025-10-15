@@ -127,11 +127,15 @@ const PaddingSelect = styled.select`
   }
 `;
 
-const TextContainer = styled.div`
+const TextInputWithIcon = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 0 15px;
+  align-items: center;
+  position: relative;
+
+  svg {
+    position: absolute;
+    right: 7px;
+  }
 `;
 
 const TextInput = styled.input`
@@ -215,8 +219,8 @@ export {
   ContentContainer,
   PaddingSelect,
   TextInput,
-  TextContainer,
   SwitchButton,
   Thumb,
   HiddenCheckbox,
+  TextInputWithIcon,
 };

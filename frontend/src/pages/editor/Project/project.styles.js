@@ -252,12 +252,13 @@ const ProjectMainCardTable = styled.div`
     vertical-align: top;
     line-height: 1.5;
 
-    &:nth-child(3) {
+    &:nth-child(2) {
+      padding-left: 10px;
+      padding-right: 10px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       max-height: calc(1.5 * 3 * 1em + 15px);
-      max-width: 600px;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
     }

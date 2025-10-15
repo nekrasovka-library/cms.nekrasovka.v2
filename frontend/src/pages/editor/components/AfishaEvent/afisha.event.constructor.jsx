@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  AuthorCardStyled,
-  AuthorNameStyled,
   ButtonsCalendarContainerMobileStyled,
   DateTextStyled,
   DateTimeStyled,
@@ -24,21 +22,18 @@ import { formatDate, formatTime } from "../../../../helpers";
 import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
 import ImagePreview from "../Image/image.preview";
-import { useParams } from "react-router-dom";
 
 const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
   const dispatch = useDispatch();
   const today = event.date || new Date();
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
-  const params = useParams();
 
   const updateText = (newText) => {
     dispatch(
       updateBlockRequest({
         id: blockId,
         content: { text: newText },
-        ...(params.blockId && { blockId: params.blockId }),
       }),
     );
   };
@@ -74,9 +69,6 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
           <EventTitleStyled>{event.title}</EventTitleStyled>
         </TextStyled>
         <TextStyled>
-          <AuthorNameStyled>{event.author_name}</AuthorNameStyled>
-        </TextStyled>
-        <TextStyled>
           <EventTextStyled>
             <Editor
               text={event.text}
@@ -87,12 +79,6 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
             />
           </EventTextStyled>
         </TextStyled>
-        <AuthorCardStyled>
-          <ImagePreview text={event.author_picture_id} borderRadius="50" />
-          <div>
-            <span>{event.author_name},</span> <span> {event.author_text}</span>
-          </div>
-        </AuthorCardStyled>
       </LeftSectionStyled>
       <RightSectionStyled $isEventCancelled={!!event.canceled}>
         <ImagePreview text={event.picture_id} borderRadius="5" />

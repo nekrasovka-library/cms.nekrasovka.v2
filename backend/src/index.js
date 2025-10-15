@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const { sequelize, models } = require("./models");
+const { sequelize } = require("./models");
 const CONFIG = require("./config.js");
+const { join } = require("node:path");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -17,6 +18,8 @@ app.use("/api/blocks", require("./routes/blocks"));
 app.use("/api/menus", require("./routes/menus"));
 app.use("/api/templates", require("./routes/templates"));
 app.use("/api/events", require("./routes/events"));
+app.use("/api/images", require("./routes/images"));
+app.use("/images", express.static(join(__dirname, "../../images")));
 
 // Раздача статики фронтенда в продакшене
 if (process.env.NODE_ENV === "production") {

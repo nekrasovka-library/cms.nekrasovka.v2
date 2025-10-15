@@ -9,6 +9,7 @@ const CONFIG = {
   PORT: process.env.PORT || 3013,
   PATHS: {
     BUILD_DIR: resolve(__dirname, process.env.FRONTEND),
+    IMAGES_DIR: resolve(__dirname, process.env.IMAGES),
     INDEX_HTML: join(resolve(__dirname, process.env.FRONTEND), "index.html"),
   },
 };

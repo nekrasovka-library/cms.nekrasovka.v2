@@ -188,19 +188,21 @@ const EventTitleStyled = styled.span`
 `;
 
 const EventTextStyled = styled.span`
+  p {
+    margin: 0;
+  }
+
   ${DESKTOP_TABLET_MEDIA} {
     p,
     span {
-      font-size: 20px !important;
-      line-height: 26px !important;
+      font-size: 20px;
     }
   }
 
   ${MOBILE_MEDIA} {
     p,
     span {
-      font-size: 14px !important;
-      line-height: 15px !important;
+      font-size: 14px;
     }
   }
 

@@ -8,7 +8,7 @@ const ImageConstructor = ({
   borderRadius = 0,
   maxWidth,
 }) => {
-  const DEFAULT_IMAGE = `${process.env.REACT_APP_URL}imgfish.jpg`;
+  const DEFAULT_IMAGE = `${process.env.REACT_APP_URL}/images/imgfish.jpg`;
   const [image, setImage] = useState(DEFAULT_IMAGE);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -18,7 +18,7 @@ const ImageConstructor = ({
 
     if (text !== null || (isTextArray && images.length > 0)) {
       const img = new Image();
-      img.src = `${process.env.REACT_APP_IMAGES_URL}${images[imgIndex]}/medium`;
+      img.src = `${process.env.REACT_APP_API}/images/${images[imgIndex]}`;
       img.onload = () => {
         setImage(img.src);
         setIsLoading(false);

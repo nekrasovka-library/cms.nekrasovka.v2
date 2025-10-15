@@ -20,7 +20,6 @@ const BlockContent = () => {
   const dispatch = useDispatch();
   const block = useSelector(({ block }) => block);
   const project = useSelector(({ project }) => project);
-  const route = useSelector(({ route }) => route);
   const [blockContent, setBlockContent] = useState(null);
   const { isContentVisible } = useSelector(({ visibility }) => visibility);
 
@@ -29,7 +28,6 @@ const BlockContent = () => {
       updateBlockRequest({
         id: block.items.id,
         ...blockContent,
-        ...(route.params.blockId && { blockId: route.params.blockId }),
       }),
     );
   };
@@ -69,6 +67,7 @@ const BlockContent = () => {
       setBlockContent({
         content: block.items.content,
         settings: block.items.settings,
+        styles: block.items.styles,
       });
     }
   }, [isContentVisible]);
@@ -82,6 +81,7 @@ const BlockContent = () => {
     const params = {
       ...contentType.params,
       value: blockContent.content[type],
+      tracks: blockContent.styles.tracks,
       type,
     };
 

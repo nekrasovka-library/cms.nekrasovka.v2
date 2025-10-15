@@ -25,20 +25,40 @@ const ImageConstructor = ({
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
+    const extFile = file.name.split(".").pop();
+    const isTextArray = Array.isArray(text);
+    let newText = isTextArray ? text : [text];
 
     if (file) {
+      const newFileName = `${blockId}${imgIndex}.${extFile}`;
+      const renamedFile = new File([file], newFileName, { type: file.type });
+
       const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}images/upload`,
+      formData.append("image", renamedFile);
+
+      await axios.post(
+        `${process.env.REACT_APP_API}/api/images/upload`,
         formData,
       );
 
-      const newText = [...text];
-      newText[imgIndex] = response.data.file.filename;
+      newText = [...newText];
+      newText[imgIndex] = newFileName;
 
       updateImage(newText);
     }
+  };
+
+  const updateImageHandler = (newImage) => {
+    const img = new Image();
+    img.src = `${process.env.REACT_APP_API}/images/${newImage}`;
+    img.onload = () => {
+      setImage(img.src);
+      setIsLoading(false);
+    };
+    img.onerror = () => {
+      setImage(DEFAULT_IMAGE);
+      setIsLoading(false);
+    };
   };
 
   useEffect(() => {
@@ -46,16 +66,7 @@ const ImageConstructor = ({
     const images = isTextArray ? text : [text];
 
     if (text !== null || (isTextArray && images.length > 0)) {
-      const img = new Image();
-      img.src = `${process.env.REACT_APP_IMAGES_URL}${images[imgIndex]}/medium`;
-      img.onload = () => {
-        setImage(img.src);
-        setIsLoading(false);
-      };
-      img.onerror = () => {
-        setImage(DEFAULT_IMAGE);
-        setIsLoading(false);
-      };
+      updateImageHandler(images[imgIndex]);
     }
   }, [text]);
 

@@ -95,9 +95,9 @@ const Editor = ({
         const newContents = [...textArray];
         newContents[blockFocused] = content;
 
-        updateText(newContents);
+        updateText({ [type]: newContents });
       } else {
-        updateText(content);
+        updateText({ [type]: content });
       }
     }
   }, [isContentChanged, blockFocused]);

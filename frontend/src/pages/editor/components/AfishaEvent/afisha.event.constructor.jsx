@@ -33,7 +33,7 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
     dispatch(
       updateBlockRequest({
         id: blockId,
-        content: { text: newText },
+        content: newText,
       }),
     );
   };
@@ -66,7 +66,16 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
           <ImagePreview text={event.picture_id} borderRadius="5" />
         </EventImageMobileStyled>
         <TextStyled>
-          <EventTitleStyled>{event.title}</EventTitleStyled>
+          <EventTextStyled>
+            <Editor
+              text={event.title}
+              type="title"
+              backgroundColor={backgroundColor}
+              blockId={blockId}
+              updateText={updateText}
+            />
+          </EventTextStyled>
+          {/*<EventTitleStyled>{event.title}</EventTitleStyled>*/}
         </TextStyled>
         <TextStyled>
           <EventTextStyled>

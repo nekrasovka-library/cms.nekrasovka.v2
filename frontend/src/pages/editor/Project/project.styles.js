@@ -247,20 +247,26 @@ const ProjectMainCardTable = styled.div`
     }
   }
 
+  .rc-table th,
+  .rc-table td {
+    &:not(:last-child) {
+      padding-right: 15px;
+    }
+  }
+
   td {
     padding: 10px 0;
     vertical-align: top;
     line-height: 1.5;
 
-    &:nth-child(2) {
-      padding-left: 10px;
-      padding-right: 10px;
+    &:nth-child(3) {
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       max-height: calc(1.5 * 3 * 1em + 15px);
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
+      max-width: 700px;
     }
   }
 

@@ -75,12 +75,6 @@ export const BLOCK_CONTENT_TYPES = {
       label: "Ограничения",
     },
   },
-  title: {
-    element: Text,
-    params: {
-      label: "Заголовок",
-    },
-  },
   date: {
     element: Calendar,
     params: {

@@ -82,6 +82,42 @@ router.post("/grouped", async (req, res) => {
   }
 });
 
+// POST /api/pages/copy - копирование страницы
+router.post("/copy", async (req, res) => {
+  try {
+    const params = req.body || {};
+    if (!params.pageId) {
+      return res.status(400).json({ error: "Page ID is required" });
+    }
+
+    const page = await models.Page.create({ ...params });
+
+    const copiedPage = await models.Page.findByPk(params.pageId, {
+      include: [{ model: models.Block, as: "blocks" }],
+    });
+
+    for (const block of copiedPage.blocks) {
+      const { type, position, styles, settings, content, variantId } =
+        block.toJSON();
+
+      await models.Block.create({
+        pageId: page.id,
+        settings,
+        content,
+        type,
+        position,
+        styles,
+        variantId,
+      });
+    }
+
+    res.status(201).json(page.id);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to create page" });
+  }
+});
+
 // POST /api/pages - создание страницы
 router.post("/", async (req, res) => {
   let projectResponse;

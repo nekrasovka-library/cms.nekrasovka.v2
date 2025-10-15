@@ -18,7 +18,10 @@ import {
 import { fetchPageSuccess } from "../../../../features/page/pageSlice";
 import { setSettingsVisibility } from "../../../../features/visibility/visibilitySlice";
 import CMSTable from "./project.main.table";
-import { apiCreateGroupedPage } from "../../../../features/page/pageApi";
+import {
+  apiCopyPage,
+  apiCreateGroupedPage,
+} from "../../../../features/page/pageApi";
 
 const ProjectMainCard = ({
   settings,
@@ -68,6 +71,28 @@ const ProjectMainCard = ({
     });
   };
 
+  const handleCopyPage = ({ record }) => {
+    const params = {
+      pageId: record.id,
+      projectId: record.projectId,
+      url: record.url,
+      name: record.name,
+      settings: record.settings,
+      styles: record.styles,
+      type: record.type,
+    };
+
+    apiCopyPage({ payload: params }).then((res) => {
+      navigate(`/projects/${projectId}/${res}`, {
+        replace: true,
+      });
+    });
+  };
+
+  const handleDeletePage = (id = pageId) => {
+    dispatch(deleteInProjectPageRequest({ id }));
+  };
+
   const onType = async () => {
     setIsTable(!isTable);
   };
@@ -84,10 +109,6 @@ const ProjectMainCard = ({
   const onSettings = () => {
     dispatch(fetchPageSuccess({ id: pageId, settings }));
     dispatch(setSettingsVisibility());
-  };
-
-  const onDelete = () => {
-    dispatch(deleteInProjectPageRequest({ id: pageId }));
   };
 
   const onChange = (e) => {
@@ -175,7 +196,7 @@ const ProjectMainCard = ({
             <span>НАСТРОЙКИ</span>
           </div>
           {!type && (
-            <div onClick={onDelete}>
+            <div onClick={handleDeletePage}>
               <Icon icon="trash" />
               <span>УДАЛИТЬ</span>
             </div>
@@ -197,6 +218,8 @@ const ProjectMainCard = ({
               pageId={pageId}
               projectId={projectId}
               navigate={navigate}
+              handleCopyPage={handleCopyPage}
+              handleDeletePage={handleDeletePage}
             />
           )}
         </ProjectMainCardTable>

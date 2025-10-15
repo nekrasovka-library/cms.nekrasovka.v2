@@ -3,14 +3,16 @@ import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import Tooltip from "../../../../nekrasovka-ui/Tooltip/tooltip";
 import React from "react";
 import { ProjectMainCardTableActions } from "../project.styles";
-import { deleteInProjectPageRequest } from "../../../../features/project/projectSlice";
-import { useDispatch } from "react-redux";
 import format from "date-fns/format";
 import locale from "date-fns/locale/ru";
 
-const CMSTable = ({ tableData, projectId, navigate }) => {
-  const dispatch = useDispatch();
-
+const CMSTable = ({
+  tableData,
+  projectId,
+  navigate,
+  handleCopyPage,
+  handleDeletePage,
+}) => {
   const columns = [
     {
       title: "Дата",
@@ -67,18 +69,14 @@ const CMSTable = ({ tableData, projectId, navigate }) => {
               <Icon
                 icon="trash"
                 type="button"
-                onClick={() =>
-                  dispatch(deleteInProjectPageRequest({ id: record.id }))
-                }
+                onClick={() => handleDeletePage(record.id)}
               />
             </Tooltip>
             <Tooltip text="Дублировать">
               <Icon
                 icon="copy"
                 type="button"
-                onClick={() => {
-                  console.log("❗", record.id);
-                }}
+                onClick={() => handleCopyPage(record)}
               />
             </Tooltip>
           </ProjectMainCardTableActions>

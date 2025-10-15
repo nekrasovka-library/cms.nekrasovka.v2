@@ -28,9 +28,9 @@ const EventCard = ({
 }) => {
   const { dateText, weekday } = formatDate(event.date);
   const time = formatTime(event.date);
-  const backgroundImageUrl =
-    process.env.REACT_APP_IMAGES_URL + event.picture_id + "/medium";
+  const backgroundImageUrl = `${process.env.REACT_APP_API}/images/${event.picture_id}`;
   const eventText = event.text.replace(/<[^>]*>/g, "");
+  const eventTitle = event.title.replace(/<[^>]*>/g, "");
 
   useEffect(() => {
     if (event.canceled) {
@@ -82,7 +82,7 @@ const EventCard = ({
         )}
       </DateTimeSectionStyled>
       <TitleSectionStyled as={Link} to={`/projects/${projectId}/${pageId}`}>
-        <EventTitleStyled $loading={loading}>{event.title}</EventTitleStyled>
+        <EventTitleStyled $loading={loading}>{eventTitle}</EventTitleStyled>
         {!event.canceled && (
           <EventSubtitleStyled $loading={loading}>
             {eventText}

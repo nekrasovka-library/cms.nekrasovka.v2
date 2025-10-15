@@ -21,10 +21,11 @@ const EventList = ({
   pageId,
 }) => {
   const { dateText, weekday } = formatDate(event.date);
-  const time = formatTime(event.time_start);
+  const time = formatTime(event.date);
   const backgroundImageUrl =
     process.env.REACT_APP_IMAGES_URL + event.picture_id + "/medium";
   const eventText = event.text.replace(/<[^>]*>/g, "");
+  const eventTitle = event.title.replace(/<[^>]*>/g, "");
 
   useEffect(() => {
     if (event.canceled) {
@@ -57,7 +58,7 @@ const EventList = ({
         </LocationTextStyled>
       </DateTimeSectionStyled>
       <TitleSectionStyled as={Link} to={`/projects/${projectId}/${pageId}`}>
-        <EventTitleStyled>{event.title}</EventTitleStyled>
+        <EventTitleStyled>{eventTitle}</EventTitleStyled>
         {!event.canceled && (
           <EventSubtitleStyled>{eventText}</EventSubtitleStyled>
         )}

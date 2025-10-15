@@ -30,7 +30,7 @@ const CMSTable = ({ tableData, projectId, navigate }) => {
     {
       title: "Заголовок",
       dataIndex: ["blocks", "0", "content", "title"], // Access title from blocks[0]
-      key: "text",
+      key: "title",
       width: "auto",
       render: (text) => text?.replace(/<[^>]+>/g, ""),
       onCell: (record) => ({

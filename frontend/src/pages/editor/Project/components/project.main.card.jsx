@@ -28,6 +28,7 @@ import Tooltip from "../../../../nekrasovka-ui/Tooltip/tooltip";
 
 const ProjectMainCard = ({
   settings,
+  styles,
   pageId,
   isPageMain,
   name,
@@ -223,6 +224,22 @@ const ProjectMainCard = ({
                   icon="trash"
                   type="button"
                   onClick={() => handleDeletePage(pageId)}
+                />
+              </Tooltip>
+              <Tooltip text="Дублировать">
+                <Icon
+                  icon="copy"
+                  type="button"
+                  onClick={() =>
+                    handleCopyPage({
+                      id: pageId,
+                      projectId,
+                      name,
+                      settings,
+                      type,
+                      styles,
+                    })
+                  }
                 />
               </Tooltip>
             </>

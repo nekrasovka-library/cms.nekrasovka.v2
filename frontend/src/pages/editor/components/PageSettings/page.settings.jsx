@@ -56,7 +56,12 @@ const PageSettings = () => {
   };
 
   const renderSettings = (type) => {
-    const settingsType = getBlockSettingsTypes(project, type, page.items.id);
+    const settingsType = getBlockSettingsTypes(
+      project,
+      type,
+      page.items.id,
+      page.items.url,
+    );
 
     if (settingsType === undefined) return;
     const SettingsComponent = settingsType.element;

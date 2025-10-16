@@ -97,11 +97,7 @@ const CMSTable = ({
               <Icon
                 icon="settings"
                 type="button"
-                onClick={() =>
-                  handlePageSettings(record.id, {
-                    ...record.settings,
-                  })
-                }
+                onClick={() => handlePageSettings(record)}
               />
             </Tooltip>
             <Tooltip text="Удалить">

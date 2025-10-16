@@ -1,7 +1,7 @@
 import Select from "../BlockContent/components/content.select";
 import Switch from "../BlockContent/components/content.switch";
 
-export const getBlockSettingsTypes = (props, type, pageId) => {
+export const getBlockSettingsTypes = (props, type, pageId, pageUrl) => {
   const BLOCK_SETTINGS_TYPES = {
     is_archive: {
       element: Switch,
@@ -29,6 +29,7 @@ export const getBlockSettingsTypes = (props, type, pageId) => {
           { value: "", label: "Страница не выбрана" },
           ...props.items?.pages
             .filter((page) => page.id !== pageId)
+            .filter((page) => page.url !== pageUrl)
             .filter((page) => page.settings.parent.pageId !== pageId)
             .map((p) => ({
               value: p.id,

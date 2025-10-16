@@ -97,8 +97,8 @@ const ProjectMainCard = ({
     dispatch(deleteInProjectPageRequest({ id }));
   };
 
-  const handlePageSettings = (id, set) => {
-    dispatch(fetchPageSuccess({ id, settings: set }));
+  const handlePageSettings = (page) => {
+    dispatch(fetchPageSuccess(page));
     dispatch(setSettingsVisibility());
   };
 
@@ -216,7 +216,16 @@ const ProjectMainCard = ({
                 <Icon
                   icon="settings"
                   type="button"
-                  onClick={() => handlePageSettings(pageId, settings)}
+                  onClick={() =>
+                    handlePageSettings({
+                      id: pageId,
+                      settings,
+                      styles,
+                      name,
+                      url,
+                      type,
+                    })
+                  }
                 />
               </Tooltip>
               <Tooltip text="Удалить">

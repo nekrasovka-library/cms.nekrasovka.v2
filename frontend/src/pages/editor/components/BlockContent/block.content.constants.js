@@ -25,6 +25,12 @@ export const getBlockSettingsTypes = (props, type) => {
         label: "Отменено",
       },
     },
+    is_public: {
+      element: Switch,
+      params: {
+        label: "Опубликовано",
+      },
+    },
   };
 
   return BLOCK_SETTINGS_TYPES[type];

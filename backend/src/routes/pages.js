@@ -26,9 +26,16 @@ router.get("/:id", async (req, res) => {
     const id = Number.parseInt(req.params.id, 10);
 
     page = await models.Page.findByPk(id, {
-      include: [{ model: models.Block, as: "blocks" }],
+      include: [
+        {
+          model: models.Block,
+          as: "blocks",
+        },
+      ],
       order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
     });
+
+    console.log("❗", page);
 
     return res.json(page);
   } catch (e) {

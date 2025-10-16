@@ -110,19 +110,32 @@ router.post("/copy", async (req, res) => {
       return res.status(400).json({ error: "Page ID is required" });
     }
 
-    const page = await models.Page.create({ ...params });
+    const page = await models.Page.create({
+      projectId: +params.projectId,
+      url: params.url,
+      name: params.name,
+      type: params.type,
+      styles: params.styles,
+    });
+
+    page.settings = {
+      ...page.settings,
+      parent: { ...params.settings.parent },
+    };
 
     const copiedPage = await models.Page.findByPk(params.pageId, {
       include: [{ model: models.Block, as: "blocks" }],
     });
 
     for (const block of copiedPage.blocks) {
-      const { type, position, styles, settings, content, variantId } =
-        block.toJSON();
+      const { type, position, styles, content, variantId } = block.toJSON();
+      const variant = await models.Variant.findByPk(variantId, {
+        attributes: ["settings"],
+      });
 
       await models.Block.create({
         pageId: page.id,
-        settings,
+        settings: variant.settings,
         content,
         type,
         position,

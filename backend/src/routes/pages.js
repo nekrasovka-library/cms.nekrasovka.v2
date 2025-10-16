@@ -45,7 +45,20 @@ router.post("/grouped", async (req, res) => {
       return res.status(400).json({ error: "Project ID is required" });
     }
 
-    const page = await models.Page.create({ ...params });
+    const page = await models.Page.create({
+      projectId: +params.projectId,
+      url: params.url,
+      name: params.name,
+      type: params.type,
+      styles: params.styles,
+    });
+
+    page.settings = {
+      ...page.settings,
+      parent: { ...params.settings.parent },
+    };
+
+    await page.save();
 
     const groupedMainPage = await models.Page.findOne({
       where: {

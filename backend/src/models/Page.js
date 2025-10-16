@@ -24,7 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       settings: {
         type: DataTypes.JSON,
         allowNull: false,
-        defaultValue: {},
+        defaultValue: {
+          parent: { pageId: null, url: "", name: "" },
+          is_public: 0,
+          is_archive: 0,
+          is_private: 0,
+        },
       },
       styles: {
         type: DataTypes.JSON,

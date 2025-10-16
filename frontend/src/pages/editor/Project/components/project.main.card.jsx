@@ -7,6 +7,8 @@ import {
   ProjectMainCardTable,
   Button,
   ProjectMainCardGroup,
+  ProjectMainCardStatus,
+  ProjectMainCardStatusContent,
 } from "../project.styles.js";
 import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -22,6 +24,7 @@ import {
   apiCopyPage,
   apiCreateGroupedPage,
 } from "../../../../features/page/pageApi";
+import Tooltip from "../../../../nekrasovka-ui/Tooltip/tooltip";
 
 const ProjectMainCard = ({
   settings,
@@ -89,8 +92,13 @@ const ProjectMainCard = ({
     });
   };
 
-  const handleDeletePage = (id = pageId) => {
+  const handleDeletePage = (id) => {
     dispatch(deleteInProjectPageRequest({ id }));
+  };
+
+  const handlePageSettings = (id, set) => {
+    dispatch(fetchPageSuccess({ id, settings: set }));
+    dispatch(setSettingsVisibility());
   };
 
   const onType = async () => {
@@ -104,11 +112,6 @@ const ProjectMainCard = ({
   const onSave = () => {
     dispatch(updateInProjectPageRequest({ id: pageId, ...editedState }));
     onClose();
-  };
-
-  const onSettings = () => {
-    dispatch(fetchPageSuccess({ id: pageId, settings }));
-    dispatch(setSettingsVisibility());
   };
 
   const onChange = (e) => {
@@ -190,16 +193,39 @@ const ProjectMainCard = ({
             <span>ГРУППА СТРАНИЦ</span>
           </div>
         </ProjectMainCardGroup>
+        {!type && (
+          <ProjectMainCardStatus>
+            {Object.entries(settings)
+              .filter(([f]) => f !== "parent")
+              .map(([key, value]) => {
+                return (
+                  <Tooltip text={key}>
+                    <ProjectMainCardStatusContent $isActive={!!value}>
+                      <div />
+                    </ProjectMainCardStatusContent>
+                  </Tooltip>
+                );
+              })}
+          </ProjectMainCardStatus>
+        )}
         <ProjectMainCardAction>
-          <div onClick={onSettings}>
-            <Icon icon="settings" />
-            <span>НАСТРОЙКИ</span>
-          </div>
           {!type && (
-            <div onClick={handleDeletePage}>
-              <Icon icon="trash" />
-              <span>УДАЛИТЬ</span>
-            </div>
+            <>
+              <Tooltip text="Настройки">
+                <Icon
+                  icon="settings"
+                  type="button"
+                  onClick={() => handlePageSettings(pageId, settings)}
+                />
+              </Tooltip>
+              <Tooltip text="Удалить">
+                <Icon
+                  icon="trash"
+                  type="button"
+                  onClick={() => handleDeletePage(pageId)}
+                />
+              </Tooltip>
+            </>
           )}
         </ProjectMainCardAction>
       </ProjectMainCardPage>
@@ -220,6 +246,7 @@ const ProjectMainCard = ({
               navigate={navigate}
               handleCopyPage={handleCopyPage}
               handleDeletePage={handleDeletePage}
+              handlePageSettings={handlePageSettings}
             />
           )}
         </ProjectMainCardTable>

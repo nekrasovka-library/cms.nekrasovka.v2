@@ -2,7 +2,11 @@ import Table from "@rc-component/table";
 import Icon from "../../../../nekrasovka-ui/Icon/icon";
 import Tooltip from "../../../../nekrasovka-ui/Tooltip/tooltip";
 import React from "react";
-import { ProjectMainCardTableActions } from "../project.styles";
+import {
+  ProjectMainCardStatus,
+  ProjectMainCardStatusContent,
+  ProjectMainCardTableActions,
+} from "../project.styles";
 import format from "date-fns/format";
 import locale from "date-fns/locale/ru";
 
@@ -12,6 +16,7 @@ const CMSTable = ({
   navigate,
   handleCopyPage,
   handleDeletePage,
+  handlePageSettings,
 }) => {
   const columns = [
     {
@@ -58,6 +63,29 @@ const CMSTable = ({
       }),
     },
     {
+      title: "Статус",
+      dataIndex: "settings",
+      key: "status",
+      width: "auto",
+      render: (text) => {
+        return (
+          <ProjectMainCardStatus>
+            {Object.entries(text)
+              .filter(([f]) => f !== "parent")
+              .map(([key, value]) => {
+                return (
+                  <Tooltip text={key}>
+                    <ProjectMainCardStatusContent $isActive={!!value}>
+                      <div />
+                    </ProjectMainCardStatusContent>
+                  </Tooltip>
+                );
+              })}
+          </ProjectMainCardStatus>
+        );
+      },
+    },
+    {
       title: "Действия",
       dataIndex: "actions",
       key: "actions",
@@ -65,6 +93,17 @@ const CMSTable = ({
       render: (_, record) => {
         return (
           <ProjectMainCardTableActions>
+            <Tooltip text="Настройки">
+              <Icon
+                icon="settings"
+                type="button"
+                onClick={() =>
+                  handlePageSettings(record.id, {
+                    ...record.settings,
+                  })
+                }
+              />
+            </Tooltip>
             <Tooltip text="Удалить">
               <Icon
                 icon="trash"

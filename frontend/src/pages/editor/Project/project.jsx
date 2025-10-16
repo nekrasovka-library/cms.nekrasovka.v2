@@ -38,7 +38,10 @@ const Project = () => {
 
   const handleCreateProjectPage = () => {
     dispatch(
-      createInProjectPageRequest({ projectId, templateId: project.templateId }),
+      createInProjectPageRequest({
+        projectId,
+        templateId: project.items.templateId,
+      }),
     );
   };
 

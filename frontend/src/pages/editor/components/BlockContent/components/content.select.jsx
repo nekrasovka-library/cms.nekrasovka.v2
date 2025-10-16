@@ -5,18 +5,25 @@ import {
   ContentContainer,
 } from "../block.content.styles";
 
-const SelectField = ({ options, label, name, value, onChange }) => (
-  <div>
-    <SettingsLabel>{label}</SettingsLabel>
-    <PaddingSelect name={name} onChange={onChange} value={value}>
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </PaddingSelect>
-  </div>
-);
+const SelectField = ({ disabled, options, label, name, value, onChange }) => {
+  return (
+    <div>
+      <SettingsLabel>{label}</SettingsLabel>
+      <PaddingSelect
+        disabled={disabled}
+        name={name}
+        onChange={onChange}
+        value={value}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </PaddingSelect>
+    </div>
+  );
+};
 
 const Select = ({
   value,
@@ -24,6 +31,7 @@ const Select = ({
   type,
   options = { value: "", label: "" },
   handleContentChange,
+  disabled,
 }) => {
   return (
     <ContentContainer>
@@ -32,6 +40,7 @@ const Select = ({
         label={label}
         value={value}
         options={options}
+        disabled={disabled}
         onChange={handleContentChange}
       />
     </ContentContainer>

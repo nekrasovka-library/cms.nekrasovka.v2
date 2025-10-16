@@ -128,16 +128,23 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Project ID is required" });
     }
 
-    const page = await models.Page.create({
-      ...params,
-      settings: {
-        parent: {
-          pageId: null,
-          url: "",
-          name: "",
-        },
-      },
-    });
+    const page = await models.Page.create({ projectId: +params.projectId });
+    const template = await models.Template.findByPk(params.templateId);
+
+    if (template.variants.length > 0) {
+      for (const [index, variantId] of template.variants.entries()) {
+        const variant = await models.Variant.findByPk(variantId, {
+          attributes: ["type", "content", "settings", "styles"],
+        });
+        await models.Block.create({
+          ...variant.toJSON(),
+          variantId,
+          position: index + 1,
+          pageId: page.id,
+        });
+      }
+    }
+
     const count = await models.Page.count({
       where: { projectId: page.projectId },
     });
@@ -224,11 +231,16 @@ router.put("/:id", async (req, res) => {
 
       if (isPages) {
         for (const pageKey of pages) {
-          pageKey.settings = settings;
+          pageKey.settings = {
+            ...pageKey.settings,
+            parent: { ...settings.parent },
+          };
+
           await pageKey.save();
         }
       }
     }
+
     if (typeof styles !== "undefined") {
       page.styles = styles;
 

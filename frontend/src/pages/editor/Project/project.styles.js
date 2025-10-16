@@ -168,7 +168,7 @@ const ProjectMainCardGroup = styled.div`
 const ProjectMainCardAction = styled.div`
   display: flex;
   align-items: center;
-  column-gap: 10px;
+  column-gap: 20px;
 
   visibility: hidden;
   justify-content: flex-end;
@@ -181,10 +181,26 @@ const ProjectMainCardAction = styled.div`
   }
 `;
 
+const ProjectMainCardStatus = styled.div`
+  display: flex;
+  column-gap: 5px;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+const ProjectMainCardStatusContent = styled.div`
+  > div {
+    height: 14px;
+    width: 14px;
+    background-color: ${({ $isActive }) => ($isActive ? "#87B179" : "#edede9")};
+    border-radius: 50%;
+  }
+`;
+
 const ProjectMainCardPage = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   height: 60px;
 
   a {
@@ -199,7 +215,7 @@ const ProjectMainCardPage = styled.div`
   @media (hover: hover) {
     > :nth-child(1):hover a,
     > :nth-child(2):hover span,
-    > :nth-child(4) > div:hover {
+    > :nth-child(5) > div:hover {
       color: #f4846b;
     }
 
@@ -210,7 +226,7 @@ const ProjectMainCardPage = styled.div`
 
     &:hover > :nth-child(1) > div svg,
     &:hover > :nth-child(2) > div svg,
-    &:hover > :nth-child(4) {
+    &:hover > :nth-child(5) {
       visibility: visible;
     }
   }
@@ -572,4 +588,6 @@ export {
   ProjectMainCardTableActions,
   Button,
   ProjectMainCardGroup,
+  ProjectMainCardStatus,
+  ProjectMainCardStatusContent,
 };

@@ -13,10 +13,10 @@ const ContentSwitch = ({ type, value, label, handleContentChange }) => {
 
   const emit = (nextChecked) => {
     const nextValue = nextChecked ? 1 : 0;
-    handleContentChange &&
-      handleContentChange({
-        target: { name: type, value: nextValue },
-      });
+
+    handleContentChange({
+      target: { name: type, value: nextValue },
+    });
   };
 
   const handleToggle = (e) => {

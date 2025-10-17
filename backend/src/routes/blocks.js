@@ -44,7 +44,17 @@ router.get("/", async (req, res) => {
         : [[orderBy, orderUpper]];
 
     const { rows, count } = await models.Block.findAndCountAll({
-      where: { ...whereClause, "settings.is_public": 1 },
+      where: whereClause,
+      include: [
+        {
+          model: models.Page,
+          as: "page",
+          where: {
+            "settings.is_public": 1,
+          },
+          required: true,
+        },
+      ],
       limit: parsedLimit,
       offset: parsedOffset,
       order: orderClause,

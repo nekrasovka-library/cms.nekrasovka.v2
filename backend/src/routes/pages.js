@@ -35,8 +35,6 @@ router.get("/:id", async (req, res) => {
       order: [[{ model: models.Block, as: "blocks" }, "position", "ASC"]],
     });
 
-    console.log("❗", page);
-
     return res.json(page);
   } catch (e) {
     console.error(e);

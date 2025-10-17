@@ -6,7 +6,6 @@ import {
   EventCanceled,
   EventImageMobileStyled,
   EventTextStyled,
-  EventTitleStyled,
   LeftSectionStyled,
   LocationTextStyled,
   RestrictionStyled,
@@ -23,9 +22,14 @@ import { updateBlockRequest } from "../../../../features/block/blockSlice";
 import { useDispatch } from "react-redux";
 import ImagePreview from "../Image/image.preview";
 
-const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
+const AfishaEventConstructor = ({
+  blockId,
+  content,
+  settings,
+  backgroundColor,
+}) => {
   const dispatch = useDispatch();
-  const today = event.date || new Date();
+  const today = content.date || new Date();
   const { dateText, weekday } = formatDate(today);
   const time = formatTime(today);
 
@@ -40,8 +44,8 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
 
   return (
     <>
-      <LeftSectionStyled $isEventCancelled={!!event.canceled}>
-        {!!event.canceled && (
+      <LeftSectionStyled $isEventCancelled={!!settings.is_canceled}>
+        {!!settings.is_canceled && (
           <EventCanceled>
             Мероприятие отменено. Приносим извинения за возможные неудобства
           </EventCanceled>
@@ -52,35 +56,34 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
             <WeekdayStyled>{weekday}</WeekdayStyled>
             <TimeStyled>{time}</TimeStyled>
           </div>
-          <RestrictionStyled>{event.restriction}</RestrictionStyled>
+          <RestrictionStyled>{content.restriction}</RestrictionStyled>
         </DateTimeStyled>
         <LocationTextStyled
           as="a"
-          href={event.geo_link}
+          href={content.geo_link}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {event.geo}
+          {content.geo}
         </LocationTextStyled>
-        <EventImageMobileStyled $isEventCancelled={!!event.canceled}>
-          <ImagePreview text={event.picture_id} borderRadius="5" />
+        <EventImageMobileStyled $isEventCancelled={!!settings.is_canceled}>
+          <ImagePreview text={content.picture_id} borderRadius="5" />
         </EventImageMobileStyled>
         <TextStyled>
           <EventTextStyled>
             <Editor
-              text={event.title}
+              text={content.title}
               type="title"
               backgroundColor={backgroundColor}
               blockId={blockId}
               updateText={updateText}
             />
           </EventTextStyled>
-          {/*<EventTitleStyled>{event.title}</EventTitleStyled>*/}
         </TextStyled>
         <TextStyled>
           <EventTextStyled>
             <Editor
-              text={event.text}
+              text={content.text}
               type="text"
               backgroundColor={backgroundColor}
               blockId={blockId}
@@ -89,9 +92,9 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
           </EventTextStyled>
         </TextStyled>
       </LeftSectionStyled>
-      <RightSectionStyled $isEventCancelled={!!event.canceled}>
-        <ImagePreview text={event.picture_id} borderRadius="5" />
-        {!event.canceled && (
+      <RightSectionStyled $isEventCancelled={!!settings.is_canceled}>
+        <ImagePreview text={content.picture_id} borderRadius="5" />
+        {!content.is_canceled && !!settings.is_registration && (
           <div>
             <div>
               <RightSectionButtonRegistrationStyled>
@@ -109,7 +112,7 @@ const AfishaEventConstructor = ({ blockId, event, backgroundColor }) => {
           </div>
         )}
       </RightSectionStyled>
-      {!event.canceled && (
+      {!content.is_canceled && !!settings.is_registration && (
         <ButtonsCalendarContainerMobileStyled>
           <RightSectionButtonRegistrationStyled>
             Регистрация

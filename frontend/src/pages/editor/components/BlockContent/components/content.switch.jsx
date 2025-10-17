@@ -6,7 +6,6 @@ import {
   SwitchButton,
   Thumb,
 } from "../block.content.styles";
-import { BLOCK_CONTENT_SWITCH_OPTIONS } from "../block.content.constants";
 
 const ContentSwitch = ({ type, value, label, handleContentChange }) => {
   const checked = Number(value) === 1;
@@ -26,9 +25,7 @@ const ContentSwitch = ({ type, value, label, handleContentChange }) => {
 
   return (
     <ContentContainer>
-      <SettingsLabel>
-        {BLOCK_CONTENT_SWITCH_OPTIONS[value]} {label}
-      </SettingsLabel>
+      <SettingsLabel>{label}</SettingsLabel>
       <HiddenCheckbox
         checked={checked}
         onChange={(e) => emit(e.target.checked)}

@@ -16,6 +16,7 @@ const AfishaEvent = ({
   maxWidth,
   content,
   blockId,
+  settings,
 }) => {
   maxWidth = calculateBlockWidth(maxWidth);
   const { isPreviewVisible } = useSelector(({ visibility }) => visibility);
@@ -35,7 +36,8 @@ const AfishaEvent = ({
           <AfishaEventPreview event={content} />
         ) : (
           <AfishaEventConstructor
-            event={content}
+            content={content}
+            settings={settings}
             backgroundColor={backgroundColor}
             blockId={blockId}
           />

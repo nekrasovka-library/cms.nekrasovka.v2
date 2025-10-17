@@ -19,16 +19,22 @@ export const getBlockSettingsTypes = (props, type) => {
         ],
       },
     },
-    canceled: {
+    is_canceled: {
       element: Switch,
       params: {
         label: "Отменено",
       },
     },
-    is_public: {
+    is_registration: {
       element: Switch,
       params: {
-        label: "Опубликовано",
+        label: "Регистрация",
+      },
+    },
+    registration_maximum: {
+      element: Text,
+      params: {
+        label: "Число людей",
       },
     },
   };
@@ -81,9 +87,4 @@ export const BLOCK_CONTENT_TYPES = {
       label: "Дата и время мероприятия",
     },
   },
-};
-
-export const BLOCK_CONTENT_SWITCH_OPTIONS = {
-  0: "не",
-  1: "",
 };

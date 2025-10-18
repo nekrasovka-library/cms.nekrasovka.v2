@@ -22,7 +22,8 @@ const HeaderRight = styled.div`
   transition-timing-function: ease-in-out;
 
   @media (hover: hover) {
-    > div {
+    > div,
+    > a {
       cursor: pointer;
 
       &:hover {
@@ -36,6 +37,7 @@ const HeaderRightPreview = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  color: #000;
 `;
 
 const HeaderLeft = styled.div`
@@ -61,7 +63,8 @@ const HeaderLeftBlankPage = styled.div`
 `;
 
 const HeaderLeftBlankPageLink = styled(HeaderLeftBlankPage)`
-  a {
+  a,
+  span {
     text-decoration: none;
     color: #000;
     letter-spacing: 1px;

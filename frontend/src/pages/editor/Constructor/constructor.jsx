@@ -16,6 +16,7 @@ import AfishaEvent from "../components/AfishaEvent/afisha.event";
 import { AnimatePresence } from "framer-motion";
 import Transition from "../components/Transition/transition";
 import TeamPerson from "../components/TeamPerson/team.person";
+import AfishaBanner from "../components/AfishaBanner/afisha.banner";
 
 const Constructor = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const Constructor = () => {
     afishaMain: AfishaMain,
     afishaPage: AfishaPage,
     afishaEvent: AfishaEvent,
+    afishaBanner: AfishaBanner,
     teamPerson: TeamPerson,
   };
 

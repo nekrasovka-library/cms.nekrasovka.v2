@@ -13,6 +13,7 @@ import BlockContent from "./pages/editor/components/BlockContent/block.content";
 import PageSettings from "./pages/editor/components/PageSettings/page.settings";
 import RouteParamsSync from "./route/RouteParamsSync";
 import { fetchMenusRequest } from "./features/menus/menusSlice";
+import Managments from "./pages/editor/Managments/managments";
 
 function App() {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ function App() {
 
       <main>
         <Routes>
+          <Route path="managements" element={<Managments />} />
           <Route path="projects">
             <Route index element={<Projects />} />
             <Route path=":projectId">

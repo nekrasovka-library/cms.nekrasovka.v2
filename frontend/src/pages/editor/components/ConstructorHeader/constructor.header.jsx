@@ -21,6 +21,7 @@ const ConstructorHeader = () => {
   const page = useSelector(({ page }) => page);
   const project = useSelector(({ project }) => project);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
+  const [isManagementsOpen, setIsManagementsOpen] = useState(false);
   const route = useSelector(({ route }) => route);
 
   const handleToggleView = () => {
@@ -43,7 +44,10 @@ const ConstructorHeader = () => {
   return (
     <HeaderContainer>
       <HeaderLeft>
-        <HeaderLeftHome to="/projects">
+        <HeaderLeftHome
+          to="/projects"
+          onClick={() => setIsManagementsOpen(false)}
+        >
           <Icon icon="home" />
           <span>Мои проекты</span>
         </HeaderLeftHome>
@@ -75,17 +79,37 @@ const ConstructorHeader = () => {
             </HeaderLeftBlankPageList>
           </>
         )}
+        {isManagementsOpen && (
+          <>
+            /
+            <HeaderLeftBlankPageLink>
+              <span>Управление</span>
+            </HeaderLeftBlankPageLink>
+          </>
+        )}
       </HeaderLeft>
-      {/*{isProjectOpen && (*/}
-      {/*  <HeaderRight>*/}
-      {/*    <HeaderRightPreview onClick={handleToggleView}>*/}
-      {/*      Предпросмотр*/}
-      {/*    </HeaderRightPreview>*/}
-      {/*    <HeaderRightPreview onClick={handleSaveProjectPage}>*/}
-      {/*      Сохранить страницу*/}
-      {/*    </HeaderRightPreview>*/}
-      {/*  </HeaderRight>*/}
-      {/*)}*/}
+      <HeaderRight>
+        {isProjectOpen ? (
+          <>
+            <HeaderRightPreview onClick={handleToggleView}>
+              Предпросмотр
+            </HeaderRightPreview>
+            <HeaderRightPreview onClick={handleSaveProjectPage}>
+              Сохранить страницу
+            </HeaderRightPreview>
+          </>
+        ) : (
+          !isManagementsOpen && (
+            <HeaderRightPreview
+              as={Link}
+              to="managements"
+              onClick={() => setIsManagementsOpen(true)}
+            >
+              Управление
+            </HeaderRightPreview>
+          )
+        )}
+      </HeaderRight>
     </HeaderContainer>
   );
 };

@@ -39,18 +39,22 @@ const PaddingSelectField = ({ label, name, value, onChange }) => (
 const Padding = ({ paddingBottom, paddingTop, handleSettingsChange }) => {
   return (
     <PaddingContainer>
-      <PaddingSelectField
-        label="Отступ сверху"
-        name="paddingTop"
-        value={paddingTop}
-        onChange={handleSettingsChange}
-      />
-      <PaddingSelectField
-        label="Отступ снизу"
-        name="paddingBottom"
-        value={paddingBottom}
-        onChange={handleSettingsChange}
-      />
+      {paddingTop && (
+        <PaddingSelectField
+          label="Отступ сверху"
+          name="paddingTop"
+          value={paddingTop}
+          onChange={handleSettingsChange}
+        />
+      )}
+      {paddingBottom && (
+        <PaddingSelectField
+          label="Отступ снизу"
+          name="paddingBottom"
+          value={paddingBottom}
+          onChange={handleSettingsChange}
+        />
+      )}
     </PaddingContainer>
   );
 };

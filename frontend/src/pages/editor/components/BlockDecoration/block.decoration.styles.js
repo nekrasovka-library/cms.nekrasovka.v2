@@ -13,7 +13,6 @@ const Container = styled.aside`
   transition-timing-function: ease-in-out;
   color: #333;
   opacity: ${({ $isMenuOpen }) => ($isMenuOpen ? "1" : "0")};
-  transform: translateX(${({ $isMenuOpen }) => ($isMenuOpen ? "0" : "-100%")});
   border-right: 1px solid #eee;
   padding-bottom: 60px;
   &::-webkit-scrollbar {
@@ -28,6 +27,24 @@ const Container1 = styled(Container)`
   left: 0;
   z-index: 1120;
   background-color: #fff;
+  transform: translateX(${({ $isMenuOpen }) => ($isMenuOpen ? "0" : "-100%")});
+`;
+
+const Container2 = styled(Container)`
+  width: 320px;
+  left: 320px;
+  z-index: 1000;
+  background-color: #fff;
+  transform: translateX(${({ $isMenuOpen }) => ($isMenuOpen ? "0" : "-200%")});
+
+  > div:nth-child(1) {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    height: 60px;
+    margin-bottom: 10px;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -86,7 +103,6 @@ const PaddingContainer = styled.div`
 `;
 
 const SettingsLabel = styled.label`
-  align-items: flex-start;
   color: #000;
   display: flex;
   gap: 5px;
@@ -288,11 +304,40 @@ const BorderContainer = styled.div`
 const SettingsTitleLabel = styled(SettingsLabel)`
   padding: 0 15px;
   font-weight: 600;
+  align-items: flex-start;
+`;
+
+const SettingsContentTitleLabel = styled(SettingsLabel)`
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid ${({ $isActive }) => ($isActive ? "#ff855d" : "#ebebeb")};
+  border-radius: 4px;
+  justify-content: space-between;
+  padding: 15px;
+  margin: 0 15px;
+  align-items: center;
+
+  span {
+    border: 1px solid #555;
+    border-bottom: none;
+    border-right: none;
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+    transform: rotate(135deg);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border: 1px solid #ff855d;
+    }
+  }
 `;
 
 export {
   Container,
   Container1,
+  Container2,
   HeaderContainer,
   HeaderButtons,
   HeaderButtonSave,
@@ -312,4 +357,5 @@ export {
   RadiusInput,
   BorderContainer,
   SettingsTitleLabel,
+  SettingsContentTitleLabel,
 };

@@ -23,6 +23,8 @@ import menu from "./menu";
 import mozaic from "./mozaic";
 import list from "./list";
 import picture from "./picture";
+import desktop from "./desktop";
+import mobile from "./mobile";
 
 export default {
   add,
@@ -50,4 +52,6 @@ export default {
   mozaic,
   list,
   picture,
+  desktop,
+  mobile,
 };

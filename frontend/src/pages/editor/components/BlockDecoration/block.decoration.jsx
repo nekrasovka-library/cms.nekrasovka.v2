@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { Container1, SettingsTitleLabel } from "./block.decoration.styles";
+import React, { Fragment, useState } from "react";
+import {
+  Container1,
+  Container2,
+  SettingsContentTitleLabel,
+  SettingsTitleLabel,
+} from "./block.decoration.styles";
 import { useDispatch, useSelector } from "react-redux";
 import Padding from "./components/padding.jsx";
 import Header from "./components/header.jsx";
@@ -12,33 +17,38 @@ import Opacity from "./components/opacity.jsx";
 import Gap from "./components/gap.jsx";
 import Height from "./components/height.jsx";
 import Border from "./components/border.jsx";
-import ElementBackgroundColor from "./components/element-background-color.jsx";
-import ElementFontSize from "./components/fontSize";
+import FontSize from "./components/fontSize";
 import Tracks from "./components/tracks.jsx";
 import {
   resetBlock,
   updateBlockRequest,
 } from "../../../../features/block/blockSlice";
 import { setDecorationVisibility } from "../../../../features/visibility/visibilitySlice";
+import { CloseMenuButton } from "../ConstructorMenus/constructor.menus.styles";
+import Icon from "../../../../nekrasovka-ui/Icon/icon";
 
 const BlockDecoration = () => {
   const dispatch = useDispatch();
   const block = useSelector(({ block }) => block);
   const { isDecorationVisible } = useSelector(({ visibility }) => visibility);
-  const [blockStyles, setBlockStyles] = useState(null);
-  const route = useSelector(({ route }) => route);
+  const [isContentVisible, setIsContentVisible] = useState(false);
+  const [selectedContent, setSelectedContent] = useState({
+    name: "",
+    data: {},
+  });
+  const [blockStyles, setBlockStyles] = useState("");
 
   const saveStyles = () => {
     dispatch(
       updateBlockRequest({
         id: block.items.id,
         styles: blockStyles,
-        ...(route.params.blockId && { blockId: route.params.blockId }),
       }),
     );
   };
 
   const saveAndExitStyles = () => {
+    handleCloseContent();
     saveStyles();
     dispatch(resetBlock());
     dispatch(setDecorationVisibility());
@@ -48,77 +58,116 @@ const BlockDecoration = () => {
     setBlockStyles((prev) => ({ ...prev, [name]: value }));
   };
 
-  const renderStyleComponent = (Component, propKey, additionalProps = {}) => {
-    const defaults = block.items.styles;
+  const handleCloseContent = () => {
+    setIsContentVisible(false);
+    setSelectedContent({ name: "", data: {} });
+  };
 
-    if (Array.isArray(propKey)) {
-      // Рендерим только если все ключи объявлены в дефолтных стилях
-      const allExistInDefaults = propKey.every(
-        (key) => defaults?.[key] !== undefined,
-      );
-      if (!allExistInDefaults) return null;
+  const renderStyleComponent = (
+    Component,
+    propIndex,
+    propKey,
+    propValue,
+    defaults,
+  ) => {
+    const hasOverride =
+      blockStyles && Object.prototype.hasOwnProperty.call(blockStyles, propKey);
+    const value = hasOverride ? blockStyles[propKey] : propValue;
 
-      // Для каждого ключа берём изменённое значение из blockStyles (если оно есть),
-      // иначе — дефолтное из block.items.styles
-      const extractedProps = propKey.reduce((acc, key) => {
-        const hasOverride =
-          blockStyles && Object.prototype.hasOwnProperty.call(blockStyles, key);
-        const value = hasOverride ? blockStyles[key] : defaults[key];
-        return { ...acc, [key]: value };
-      }, {});
+    return (
+      <Component
+        key={propIndex}
+        {...{ [propKey]: value }}
+        handleSettingsChange={handleStylesChange}
+        defaultStyles={defaults}
+      />
+    );
+  };
 
-      return (
-        <Component
-          {...extractedProps}
-          {...additionalProps}
-          handleSettingsChange={handleStylesChange}
-          defaultStyles={defaults}
-        />
-      );
-    }
-
-    // Одиночный ключ: показываем контрол, если он есть в дефолтных стилях
-    if (defaults?.[propKey] !== undefined) {
-      const hasOverride =
-        blockStyles &&
-        Object.prototype.hasOwnProperty.call(blockStyles, propKey);
-      const value = hasOverride ? blockStyles[propKey] : defaults[propKey];
-
-      return (
-        <Component
-          {...{ [propKey]: value }}
-          {...additionalProps}
-          handleSettingsChange={handleStylesChange}
-          defaultStyles={defaults}
-        />
-      );
-    }
-
-    return null;
+  const DECORATION_STYLE = {
+    maxWidth: Columns,
+    gap: Gap,
+    textAlign: Align,
+    paddingTop: Padding,
+    paddingBottom: Padding,
+    tracks: Tracks,
+    backgroundColor: BackgroundColor,
+    color: Color,
+    fontSize: FontSize,
+    opacity: Opacity,
+    borderRadius: Radius,
+    border: Border,
+    height: Height,
   };
 
   return (
-    <Container1 $isMenuOpen={isDecorationVisible}>
-      <Header
-        saveSettings={saveStyles}
-        saveAndExitSettings={saveAndExitStyles}
-      />
-      <SettingsTitleLabel>Оформление блока</SettingsTitleLabel>
-      {renderStyleComponent(Columns, "maxWidth")}
-      {renderStyleComponent(Gap, "gap")}
-      {renderStyleComponent(Align, "textAlign")}
-      {renderStyleComponent(Padding, ["paddingTop", "paddingBottom"])}
-      {renderStyleComponent(BackgroundColor, "backgroundColor")}
-      <SettingsTitleLabel>Оформление элемента</SettingsTitleLabel>
-      {renderStyleComponent(Tracks, "tracks")}
-      {renderStyleComponent(Color, "color")}
-      {renderStyleComponent(ElementFontSize, "elementFontSize")}
-      {renderStyleComponent(ElementBackgroundColor, "elementBackgroundColor")}
-      {renderStyleComponent(Opacity, "opacity")}
-      {renderStyleComponent(Radius, "borderRadius")}
-      {renderStyleComponent(Border, "border")}
-      {renderStyleComponent(Height, "height")}
-    </Container1>
+    <>
+      <Container1
+        $isMenuOpen={isDecorationVisible}
+        $isContentVisible={isContentVisible}
+      >
+        <Header
+          saveSettings={saveStyles}
+          saveAndExitSettings={saveAndExitStyles}
+        />
+        <SettingsTitleLabel>Оформление блока</SettingsTitleLabel>
+        {block.status === "succeeded" && (
+          <>
+            {Object.entries(block?.items?.styles["block"]["desktop"]).map(
+              ([key, value], index) => {
+                const defaults = block?.items?.styles["block"]["desktop"];
+                const Component = DECORATION_STYLE[key];
+                return Component
+                  ? renderStyleComponent(Component, index, key, value, defaults)
+                  : null;
+              },
+            )}
+          </>
+        )}
+        <SettingsTitleLabel>Оформление контента</SettingsTitleLabel>
+        {block.status === "succeeded" &&
+          Object.entries(block?.items?.styles["content"]).map(
+            ([parentKey, parentValue]) => {
+              const defaults = parentValue["desktop"];
+
+              return (
+                <Fragment key={parentKey}>
+                  <SettingsContentTitleLabel
+                    $isActive={selectedContent.name === parentKey}
+                    onClick={() => {
+                      setSelectedContent({ name: parentKey, data: defaults });
+                      setIsContentVisible(true);
+                    }}
+                  >
+                    {parentKey}
+                    <span />
+                  </SettingsContentTitleLabel>
+                </Fragment>
+              );
+            },
+          )}
+      </Container1>
+      <Container2 $isMenuOpen={isContentVisible}>
+        <div>
+          <CloseMenuButton>
+            <Icon icon="closeMenu" type="button" onClick={handleCloseContent} />
+          </CloseMenuButton>
+        </div>
+        <SettingsTitleLabel>{selectedContent.name}</SettingsTitleLabel>
+        {Object.entries(selectedContent.data).map(([key, value], index) => {
+          const Component = DECORATION_STYLE[key];
+          return Component
+            ? renderStyleComponent(
+                Component,
+                index,
+                key,
+                value,
+                selectedContent.data,
+              )
+            : null;
+        })}
+      </Container2>
+    </>
   );
 };
 

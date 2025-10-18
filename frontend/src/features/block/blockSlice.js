@@ -30,6 +30,7 @@ const blockSlice = createSlice({
     },
     setBlock(state, action) {
       state.items = { ...state.items, ...action.payload };
+      state.status = "succeeded";
     },
     resetBlock() {
       return initialState;
